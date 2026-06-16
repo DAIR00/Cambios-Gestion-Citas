@@ -1,0 +1,151 @@
+/* ==========================================
+   Table System — SENA Design System 2026
+   Sticky headers, row actions, responsive
+   WCAG AAA: focus-visible, aria support
+   ========================================== */
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-body);
+}
+
+/* Header */
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.data-table th {
+  padding: 0.75rem 1rem;
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: var(--neutral-50);
+  text-align: left;
+  border-bottom: 2px solid var(--border-light);
+  white-space: nowrap;
+}
+
+.data-table th:first-child {
+  padding-left: var(--space-lg);
+}
+
+.data-table th:last-child {
+  padding-right: var(--space-lg);
+}
+
+/* Sortable headers */
+.data-table th[aria-sort] {
+  cursor: pointer;
+  user-select: none;
+}
+
+.data-table th[aria-sort]:hover {
+  color: var(--text-primary);
+}
+
+.data-table th[aria-sort]::after {
+  content: '';
+  display: inline-block;
+  margin-left: var(--space-xs);
+  vertical-align: middle;
+  border: 4px solid transparent;
+}
+
+.data-table th[aria-sort="ascending"]::after {
+  border-bottom-color: var(--sena-green);
+}
+
+.data-table th[aria-sort="descending"]::after {
+  border-top-color: var(--sena-green);
+}
+
+/* Body rows */
+.data-table tbody tr {
+  transition: background var(--duration-fast) var(--ease-out-quart);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+  background: var(--neutral-50);
+}
+
+.data-table tbody tr:focus-within {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--sena-green);
+  border-radius: var(--radius-sm);
+}
+
+/* Inactive rows */
+.data-table tbody tr[aria-disabled="true"] {
+  opacity: 0.5;
+}
+
+/* Cells */
+.data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--neutral-100);
+  vertical-align: middle;
+  line-height: 1.5;
+}
+
+.data-table td:first-child {
+  padding-left: var(--space-lg);
+}
+
+.data-table td:last-child {
+  padding-right: var(--space-lg);
+}
+
+/* Row actions (hover reveal) */
+.data-table .row-actions {
+  display: flex;
+  gap: var(--space-xs);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out-quart);
+}
+
+.data-table tr:hover .row-actions,
+.data-table tr:focus-within .row-actions {
+  opacity: 1;
+}
+
+/* Empty state in table */
+.data-table .empty-row td {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .data-table th,
+  .data-table td {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .data-table th:first-child,
+  .data-table td:first-child {
+    padding-left: var(--space-md);
+  }
+
+  .data-table th:last-child,
+  .data-table td:last-child {
+    padding-right: var(--space-md);
+  }
+}

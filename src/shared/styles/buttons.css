@@ -1,0 +1,259 @@
+/* ==========================================
+   Button System — SENA Design System 2026
+   Variants: primary, secondary, success,
+   danger, ghost, icon, link
+   States: hover, active, focus, disabled,
+   loading (aria-busy)
+   ========================================== */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-normal) var(--ease-out-quart),
+    background var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--sena-green);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* === Variants === */
+
+.btn-primary {
+  background: var(--sena-green);
+  color: white;
+  box-shadow: var(--shadow-card-sm);
+}
+
+.btn-primary:hover {
+  background: var(--sena-green-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-green);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-card-sm);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+
+.btn-secondary:hover {
+  background: var(--neutral-100);
+  border-color: var(--neutral-300);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card-sm);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-success {
+  background: var(--color-success);
+  color: white;
+  box-shadow: var(--shadow-card-sm);
+}
+
+.btn-success:hover {
+  background: #166534;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(21, 128, 61, 0.3);
+}
+
+.btn-danger {
+  background: var(--color-error);
+  color: white;
+  box-shadow: var(--shadow-card-sm);
+}
+
+.btn-danger:hover {
+  background: #991b1b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(185, 28, 28, 0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--neutral-100);
+  color: var(--text-primary);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--sena-green);
+  font-weight: 600;
+  padding: 0;
+  position: relative;
+}
+
+.btn-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-normal) var(--ease-out-quart);
+}
+
+.btn-link:hover {
+  color: var(--sena-green-dark);
+}
+
+.btn-link:hover::after {
+  width: 100%;
+}
+
+/* Icon-only button */
+.btn-icon {
+  padding: var(--space-sm);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  background: var(--neutral-100);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card-sm);
+}
+
+/* === Size variants === */
+.btn--sm {
+  padding: 0.375rem 0.75rem;
+  font-size: var(--text-small);
+  border-radius: var(--radius-sm);
+}
+
+.btn--lg {
+  padding: var(--space-md) var(--space-xl);
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+/* === Loading state === */
+.btn[aria-busy="true"] {
+  pointer-events: none;
+}
+
+.btn[aria-busy="true"] .btn__label {
+  visibility: hidden;
+}
+
+.btn[aria-busy="true"]::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* === Full width === */
+.btn--block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* === Legacy compatibility (standalone class names without .btn base) === */
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-normal) var(--ease-out-quart), background var(--duration-fast) var(--ease-out-quart);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary { background: var(--sena-green); color: white; box-shadow: var(--shadow-card-sm); }
+.btn-primary:hover { background: var(--sena-green-dark); transform: translateY(-1px); box-shadow: var(--shadow-green); }
+
+.btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-default); }
+.btn-secondary:hover { background: var(--neutral-100); border-color: var(--neutral-300); transform: translateY(-1px); box-shadow: var(--shadow-card-sm); }
+
+.btn-success { background: var(--color-success); color: white; }
+.btn-success:hover { background: #166534; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(21, 128, 61, 0.3); }
+
+.btn-danger { background: var(--color-error); color: white; }
+.btn-danger:hover { background: #991b1b; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(185, 28, 28, 0.3); }
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-success:focus-visible,
+.btn-danger:focus-visible { outline: 2px solid var(--sena-green); outline-offset: 2px; }
+
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-success:disabled,
+.btn-danger:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .btn {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .btn-icon {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.6rem;
+  }
+}

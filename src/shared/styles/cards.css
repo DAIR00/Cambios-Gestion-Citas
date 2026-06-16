@@ -1,0 +1,158 @@
+/* ==========================================
+   Card System — SENA Design System 2026
+   3 depth levels: flat, elevated, modal
+   Variants: accent-top, interactive, bento
+   ========================================== */
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition:
+    transform var(--duration-normal) var(--ease-out-quart),
+    box-shadow var(--duration-normal) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+}
+
+/* Depth 1: Flat (background info, secondary data) */
+.card--flat {
+  box-shadow: var(--shadow-card-sm);
+  border: 1px solid var(--border-light);
+}
+
+/* Depth 2: Elevated (primary content, KPIs) */
+.card--elevated {
+  box-shadow: var(--shadow-card-md);
+  border: 1px solid transparent;
+}
+
+.card--elevated:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* Depth 3: Modal/Drawer */
+.card--modal {
+  box-shadow: var(--shadow-modal);
+  border-radius: var(--radius-xl);
+  border: none;
+}
+
+/* Interactive card (clickable) */
+.card--interactive {
+  cursor: pointer;
+}
+
+.card--interactive:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card--interactive:focus-visible {
+  outline: 2px solid var(--sena-green);
+  outline-offset: 2px;
+}
+
+/* Accent top color bar */
+.card--accent-top {
+  border-top: 3px solid var(--card-accent, var(--sena-green));
+  padding-top: calc(var(--space-lg) - 3px);
+}
+
+/* Card with left color border (appointment cards) */
+.card--accent-left {
+  border-left: 4px solid var(--card-accent, var(--sena-green));
+  border-radius: var(--radius-lg) var(--radius-sm) var(--radius-sm) var(--radius-lg);
+}
+
+/* Hover-reveal actions */
+.card__actions {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out-quart);
+}
+
+.card:hover .card__actions,
+.card:focus-within .card__actions {
+  opacity: 1;
+}
+
+/* Card header */
+.card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.card__title {
+  font-size: var(--text-h3);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card__subtitle {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* Card body */
+.card__body {
+  color: var(--text-secondary);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* Card footer */
+.card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-light);
+}
+
+/* Bento grid card spacing */
+.bento {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr;
+}
+
+.bento .card--span-2 {
+  grid-column: span 2;
+}
+
+.bento .card--tall {
+  grid-row: span 2;
+}
+
+.bento .card--wide {
+  grid-column: span 2;
+}
+
+@media (min-width: 640px) {
+  .bento {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Responsive cards */
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-md);
+  }
+
+  .bento .card--span-2,
+  .bento .card--wide {
+    grid-column: span 1;
+  }
+}

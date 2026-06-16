@@ -1,0 +1,110 @@
+/* ==========================================
+   Professional Dashboard — Legacy styles
+   Filter tabs, history timeline
+   ========================================== */
+
+/* Filter tabs container (used in all prof dashboards) */
+.prof-filter-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  overflow-x: auto;
+  padding-bottom: var(--space-xs);
+}
+
+/* History timeline */
+.history-timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.history-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+}
+
+.history-item {
+  position: relative;
+  padding-bottom: var(--space-lg);
+}
+
+.history-item::before {
+  content: '';
+  position: absolute;
+  left: -1.65rem;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-300);
+  background: var(--bg-card);
+}
+
+.history-item.completed::before {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.history-item.pending::before {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.history-item-content {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.history-item-content .date {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* KPI card legacy (used in admin overview) */
+.kpi-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card-sm);
+}
+
+.kpi-card .kpi-value {
+  font-size: var(--text-h1);
+  font-weight: 700;
+  margin: var(--space-xs) 0;
+}
+
+.kpi-card .kpi-label {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.kpi-card .kpi-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--text-small);
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.kpi-card .kpi-trend.positive { background: #dcfce7; color: #15803d; }
+.kpi-card .kpi-trend.negative { background: #fee2e2; color: #b91c1c; }
+
+/* Professional stats grid */
+.prof-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}

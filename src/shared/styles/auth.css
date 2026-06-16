@@ -1,0 +1,276 @@
+/* ==========================================
+   Auth Card — SENA Design System 2026
+   Login / Register forms
+   ========================================== */
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-modal);
+  animation: modalContentIn var(--duration-normal) var(--ease-spring);
+  position: relative;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--space-xl);
+  right: var(--space-xl);
+  height: 3px;
+  background: var(--sena-green);
+  border-radius: 0 0 var(--radius-full) var(--radius-full);
+}
+
+.auth-card.register-card {
+  max-width: 520px;
+}
+
+.auth-card h1 {
+  font-size: var(--text-h1);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.auth-subtitle {
+  color: var(--text-secondary);
+  font-size: var(--text-small);
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
+}
+
+/* Error banner */
+.auth-error {
+  background: #fef2f2;
+  color: var(--color-error);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--text-small);
+  font-weight: 500;
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: 1px solid #fecaca;
+  animation: shake var(--duration-normal) var(--ease-spring);
+}
+
+.auth-error::before {
+  content: "!";
+  width: 20px;
+  height: 20px;
+  background: var(--color-error);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+/* Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Fields inside auth forms */
+.auth-form .field {
+  padding-top: 1.5rem;
+}
+
+.auth-form .field__input {
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.auth-form .field__label {
+  top: 1.75rem;
+  left: 0.9rem;
+}
+
+.auth-form .field__input:focus + .field__label,
+.auth-form .field__input:not(:placeholder-shown) + .field__label {
+  top: 0.25rem;
+  left: 0.65rem;
+}
+
+/* Password toggle */
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-out-quart);
+}
+
+.password-toggle:hover {
+  color: var(--text-primary);
+  background: var(--neutral-100);
+}
+
+/* === Password field label fix === */
+.auth-form .field .password-field .field__label {
+  top: 0.25rem;
+}
+
+.auth-form .field .password-field .field__input:focus + .field__label,
+.auth-form .field .password-field .field__input:not(:placeholder-shown) + .field__label {
+  top: -1.25rem;
+}
+
+/* Submit button */
+.auth-form .btn-primary {
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+/* Forgot password link */
+.auth-forgot {
+  text-align: right;
+  margin-top: -0.5rem;
+}
+
+.auth-forgot a {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.auth-forgot a:hover {
+  color: var(--sena-green);
+}
+
+/* Footer */
+.auth-footer {
+  margin-top: var(--space-lg);
+  text-align: center;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.auth-link {
+  color: var(--sena-green);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  position: relative;
+}
+
+.auth-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--sena-green);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-normal) var(--ease-out-quart);
+}
+
+.auth-link:hover {
+  color: var(--sena-green-dark);
+}
+
+.auth-link:hover::after {
+  width: 100%;
+}
+
+/* Section divider (Register) */
+.auth-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sena-green);
+  margin-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.auth-section-title svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Success icon */
+.auth-success-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  color: var(--sena-green);
+  animation: modalContentIn var(--duration-normal) var(--ease-spring);
+}
+
+.auth-success-icon.auth-error-icon {
+  color: var(--color-error);
+}
+
+/* Hint text */
+.auth-hint {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: var(--space-sm);
+  line-height: 1.5;
+}
+
+/* Back button in success state */
+.auth-back-btn {
+  margin-top: var(--space-md);
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .auth-card {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card-lg);
+  }
+
+  .auth-card::before {
+    left: var(--space-lg);
+    right: var(--space-lg);
+  }
+
+  .auth-card h1 {
+    font-size: var(--text-h2);
+  }
+}
+
+@media (min-width: 1441px) {
+  .auth-card {
+    padding: var(--space-2xl);
+    max-width: 480px;
+  }
+
+  .auth-card.register-card {
+    max-width: 560px;
+  }
+
+  .auth-card h1 {
+    font-size: var(--text-h1);
+  }
+}

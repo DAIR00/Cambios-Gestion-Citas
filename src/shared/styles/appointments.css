@@ -1,0 +1,482 @@
+/* ==========================================
+   Appointments — Legacy styles still in use
+   Report generator, status badges
+   ========================================== */
+
+/* Report generator summary cards */
+.report-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.report-summary-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+}
+
+.report-summary-card h4 {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.report-summary-card .value {
+  font-size: var(--text-h1);
+  font-weight: 700;
+}
+
+/* Status badge legacy (used in ReportGenerator & RoleManagement) */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-small);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.status-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-badge.status-confirmed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-badge.status-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.status-cancelled {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+}
+
+.status-badge.status-no_show {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Filter tabs legacy (used in admin) */
+.filter-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  overflow-x: auto;
+}
+
+.filter-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: var(--text-small);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-out-quart);
+}
+
+.filter-tabs button:hover {
+  background: var(--neutral-100);
+  color: var(--text-primary);
+}
+
+.filter-tabs button.active {
+  background: var(--sena-green);
+  color: white;
+  border-color: var(--sena-green);
+}
+
+/* Dot pattern for report generator */
+.dot-pattern {
+  position: relative;
+  overflow: hidden;
+}
+
+.dot-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--border-light) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ==========================================
+   Report Generator — Main Container
+   ========================================== */
+
+.report-generator {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* ==========================================
+   Report Header — Title + Actions
+   ========================================== */
+
+.report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.report-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.report-title svg {
+  color: var(--sena-green);
+  flex-shrink: 0;
+}
+
+.report-title h2 {
+  font-size: var(--text-h3);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.report-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* ==========================================
+   Report Filters
+   ========================================== */
+
+.report-filters {
+  padding: var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--space-lg);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.filters-grid .field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.filters-grid .field label {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.filters-grid .field select,
+.filters-grid .field input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  transition: border-color var(--duration-fast) var(--ease-smooth);
+}
+
+.filters-grid .field select:focus,
+.filters-grid .field input:focus {
+  outline: none;
+  border-color: var(--sena-green);
+  box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.08);
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-light);
+}
+
+/* ==========================================
+   Report Placeholder (Empty State)
+   ========================================== */
+
+.report-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-3xl) var(--space-xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  min-height: 300px;
+}
+
+.report-placeholder p {
+  font-size: var(--text-body);
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+  max-width: 400px;
+}
+
+/* ==========================================
+   Report Summary Cards
+   ========================================== */
+
+.report-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  text-align: center;
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+}
+
+.summary-card.success {
+  border-top: 3px solid var(--color-success);
+}
+
+.summary-card.info {
+  border-top: 3px solid var(--color-info);
+}
+
+.summary-card.warning {
+  border-top: 3px solid var(--color-warning);
+}
+
+.summary-card.danger {
+  border-top: 3px solid var(--color-error);
+}
+
+.summary-value {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.summary-label {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* ==========================================
+   Report Table
+   ========================================== */
+
+.report-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--space-md);
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-body);
+}
+
+.report-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.report-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: var(--neutral-50);
+  border-bottom: 2px solid var(--border-light);
+  white-space: nowrap;
+}
+
+.report-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--neutral-100);
+  vertical-align: middle;
+}
+
+.report-table tbody tr:hover {
+  background: var(--neutral-50);
+}
+
+.report-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.reason-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Dependency badge */
+.dep-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   Report Footer
+   ========================================== */
+
+.report-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   Responsive — Report Generator
+   ========================================== */
+
+@media (max-width: 768px) {
+  .report-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-md);
+  }
+
+  .report-title {
+    justify-content: center;
+  }
+
+  .report-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .report-filters {
+    padding: var(--space-md);
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .filter-actions .btn-primary,
+  .filter-actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .report-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .summary-card {
+    padding: var(--space-md);
+  }
+
+  .summary-value {
+    font-size: var(--text-h3);
+  }
+
+  .report-table th,
+  .report-table td {
+    padding: 0.5rem 0.75rem;
+    font-size: var(--text-small);
+  }
+
+  .report-placeholder {
+    padding: var(--space-xl) var(--space-md);
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .report-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-card {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .summary-value {
+    font-size: var(--text-body);
+  }
+
+  .summary-label {
+    font-size: 0.7rem;
+  }
+
+  .report-table-container {
+    font-size: var(--text-small);
+  }
+}

@@ -1,0 +1,212 @@
+/* ==========================================
+   Dashboard — Legacy coordination styles
+   KPI grid, charts grid, coordination tabs
+   ========================================== */
+
+/* KPI grid (admin overview) */
+.overview-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+/* Charts grid */
+.overview-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .overview-charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Coordination tabs */
+.coordination-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.coordination-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.coordination-tabs .tab-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: var(--text-small);
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--duration-fast) var(--ease-out-quart);
+}
+
+.coordination-tabs .tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  border-radius: var(--radius-full) var(--radius-full) 0 0;
+  transition: background var(--duration-fast) var(--ease-out-quart);
+}
+
+.coordination-tabs .tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.coordination-tabs .tab-btn.active {
+  color: var(--sena-green);
+}
+
+.coordination-tabs .tab-btn.active::after {
+  background: var(--sena-green);
+}
+
+/* Data filter bar */
+.data-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--space-xl);
+}
+
+.data-filter input[type="date"] {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+  color: var(--text-primary);
+}
+
+.data-filter input[type="date"]:focus {
+  outline: none;
+  border-color: var(--sena-green);
+  box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.12);
+}
+
+.date-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--sena-green);
+  box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.12);
+}
+
+/* Professional efficiency table */
+.table-container {
+  padding: var(--space-lg);
+}
+
+.table-container h3 {
+  margin: 0 0 var(--space-md);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.efficiency-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 140px;
+}
+
+.efficiency-bar .efficiency-fill {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out-quart);
+}
+
+.efficiency-bar span {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+/* Chart container */
+.chart-container {
+  min-height: 250px;
+}
+
+.chart-container h3 {
+  margin: 0 0 var(--space-md);
+  font-size: var(--text-h3);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Date filter bar */
+.date-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .chart-container {
+    min-height: 200px;
+  }
+
+  .chart-container h3 {
+    font-size: var(--text-body);
+  }
+
+  .efficiency-bar {
+    min-width: 100px;
+  }
+
+  .table-container {
+    padding: var(--space-md);
+  }
+
+  .table-container h3 {
+    font-size: var(--text-body);
+  }
+
+  .date-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-md);
+  }
+}

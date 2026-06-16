@@ -1,0 +1,269 @@
+/* ==========================================
+   Form System — SENA Design System 2026
+   Floating labels, inline validation,
+   WCAG AAA compliant
+   ========================================== */
+
+/* === Form group (floating label pattern) === */
+.field {
+  position: relative;
+  padding-top: 1.5rem;
+}
+
+.field__input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-family: var(--font-sans);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  transition:
+    border-color var(--duration-fast) var(--ease-out-quart),
+    box-shadow var(--duration-fast) var(--ease-out-quart),
+    background var(--duration-fast) var(--ease-out-quart);
+  appearance: none;
+}
+
+.field__input::placeholder {
+  color: transparent;
+}
+
+.field__input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--sena-green);
+  box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.12);
+  background: white;
+}
+
+/* Floating label */
+.field__label {
+  position: absolute;
+  top: 1.75rem;
+  left: 0.875rem;
+  color: var(--text-muted);
+  font-size: var(--text-body);
+  pointer-events: none;
+  transition: all var(--duration-fast) var(--ease-out-quart);
+  background: var(--bg-card);
+  padding: 0 0.25rem;
+  line-height: 1.4;
+}
+
+.field__input:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label,
+.field select:focus + .field__label,
+.field select:not([value=""]) + .field__label,
+.field textarea:focus + .field__label,
+.field textarea:not(:placeholder-shown) + .field__label {
+  top: 0.25rem;
+  left: 0.625rem;
+  font-size: var(--text-small);
+  color: var(--sena-green);
+  font-weight: 500;
+}
+
+/* === Static label (no floating) === */
+.field--static {
+  padding-top: 0;
+}
+
+.field--static .field__label {
+  position: relative;
+  top: auto;
+  left: auto;
+  padding: 0;
+  margin-bottom: var(--space-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.field--static .field__input:focus + .field__label,
+.field--static .field__input:not(:placeholder-shown) + .field__label,
+.field--static select:focus + .field__label,
+.field--static select:not([value=""]) + .field__label,
+.field--static textarea:focus + .field__label,
+.field--static textarea:not(:placeholder-shown) + .field__label {
+  top: auto;
+  left: auto;
+  font-size: inherit;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Help text */
+.field__help {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+/* === Validation states === */
+
+/* Error */
+.field--error .field__input,
+.field--error select,
+.field--error textarea {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+.field--error .field__label {
+  color: var(--color-error);
+}
+
+.field__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-error);
+  font-size: var(--text-small);
+  font-weight: 500;
+  margin-top: var(--space-xs);
+  animation: fadeIn var(--duration-fast) var(--ease-out-quart);
+}
+
+/* Success */
+.field--success .field__input {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1);
+}
+
+/* === Select with custom arrow === */
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237c8399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+/* === Textarea === */
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* === Checkbox & Radio === */
+.checkbox,
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  font-size: var(--text-body);
+}
+
+.checkbox input[type="checkbox"],
+.radio input[type="radio"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--sena-green);
+  cursor: pointer;
+}
+
+.checkbox input:focus-visible,
+.radio input:focus-visible {
+  outline: 2px solid var(--sena-green);
+  outline-offset: 2px;
+}
+
+/* === Toggle switch === */
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.toggle__track {
+  width: 44px;
+  height: 24px;
+  background: var(--neutral-300);
+  border-radius: var(--radius-full);
+  transition: background var(--duration-fast) var(--ease-out-quart);
+  position: relative;
+}
+
+.toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-card-sm);
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle input:checked + .toggle__track {
+  background: var(--sena-green);
+}
+
+.toggle input:checked + .toggle__track .toggle__thumb {
+  transform: translateX(20px);
+}
+
+.toggle input:focus-visible + .toggle__track {
+  outline: 2px solid var(--sena-green);
+  outline-offset: 2px;
+}
+
+/* === Form row (inline fields) === */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .field-row--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field-row--3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* === Password field with toggle === */
+.password-field {
+  position: relative;
+}
+
+.password-field .field__input {
+  padding-right: 2.5rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+.password-toggle:hover {
+  color: var(--text-secondary);
+}

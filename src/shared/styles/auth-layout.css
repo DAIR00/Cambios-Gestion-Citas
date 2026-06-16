@@ -1,0 +1,284 @@
+/* ==========================================
+   Auth Layout — SENA Design System 2026
+   Split screen with warm brand panel
+   ========================================== */
+
+.auth-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Left panel (branding) ── */
+.auth-layout-brand {
+  flex: 0 0 35%;
+  background: linear-gradient(135deg, #2d8600 0%, #39a900 30%, #1a6b00 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Mesh gradient overlay */
+.auth-layout-brand::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Dot pattern */
+.auth-layout-brand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* Decorative blobs */
+.auth-brand-decoration {
+  position: absolute;
+  top: 10%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: floatBlob 8s ease-in-out infinite;
+}
+
+.auth-brand-decoration-2 {
+  position: absolute;
+  bottom: 15%;
+  left: -5%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  filter: blur(30px);
+  pointer-events: none;
+  animation: floatBlob 10s ease-in-out infinite reverse;
+}
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(10px, -15px) scale(1.05); }
+}
+
+.auth-brand-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 320px;
+}
+
+/* Logo */
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.auth-logo-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+}
+
+.auth-logo-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.auth-logo-icon-sm {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.auth-logo-icon-sm svg {
+  width: 22px;
+  height: 22px;
+}
+
+.auth-logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+}
+
+/* Brand text */
+.auth-brand-title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: white;
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.auth-brand-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: var(--space-2xl);
+  font-weight: 400;
+}
+
+/* Feature list */
+.auth-features {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.auth-feature-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.auth-feature-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Trust signal */
+.auth-trust {
+  margin-top: var(--space-xl);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+/* ── Right panel (form) ── */
+.auth-layout-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-root);
+}
+
+.auth-mobile-header {
+  display: none;
+  background: var(--gradient-brand);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-mobile-header .auth-logo {
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-form-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+  .auth-layout-brand {
+    flex: 0 0 40%;
+    padding: var(--space-xl);
+  }
+
+  .auth-brand-title {
+    font-size: 1.75rem;
+  }
+
+  .auth-features {
+    gap: var(--space-sm);
+  }
+
+  .auth-feature-item {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-layout {
+    flex-direction: column;
+  }
+
+  .auth-layout-brand {
+    display: none;
+  }
+
+  .auth-mobile-header {
+    display: block;
+  }
+
+  .auth-form-wrapper {
+    flex: 1;
+    padding: var(--space-lg) var(--space-md);
+    align-items: flex-start;
+    padding-top: var(--space-xl);
+  }
+}
+
+@media (min-width: 1441px) {
+  .auth-layout-brand {
+    flex: 0 0 40%;
+    padding: var(--space-2xl);
+  }
+
+  .auth-brand-content {
+    max-width: 400px;
+  }
+
+  .auth-brand-title {
+    font-size: 2.75rem;
+  }
+
+  .auth-form-wrapper {
+    padding: var(--space-2xl);
+  }
+}

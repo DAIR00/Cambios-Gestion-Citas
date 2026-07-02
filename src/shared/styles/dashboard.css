@@ -209,4 +209,13 @@
     align-items: stretch;
     padding: var(--space-md);
   }
+
+  .coordination-tabs .tab-btn {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.75rem;
+  }
+
+  .coordination-tabs .tab-btn .tab-label {
+    display: none;
+  }
 }

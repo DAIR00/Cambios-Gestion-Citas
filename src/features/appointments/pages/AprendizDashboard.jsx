@@ -72,7 +72,8 @@ export default function AprendizDashboard() {
     [appointments]
   );
 
-  const randomTip = useMemo(() => tips[Math.floor(Math.random() * tips.length)], []);
+  const [tipIndex] = useState(() => Math.floor(Math.random() * tips.length));
+  const randomTip = tips[tipIndex];
 
   const handleCancel = async (id) => {
     await cancelAppointment(id);
@@ -142,7 +143,7 @@ export default function AprendizDashboard() {
         <div className="bento stagger-enter">
           {/* Next appointment — highlighted card */}
           {nextAppointment && (
-            <div className="card card--elevated card--tall card--accent-top" style={{ "--card-accent": "var(--sena-green)" }}>
+            <div className="card card--elevated card--tall">
               <div className="card__header">
                 <div>
                   <h3 className="card__title">Próxima Cita</h3>

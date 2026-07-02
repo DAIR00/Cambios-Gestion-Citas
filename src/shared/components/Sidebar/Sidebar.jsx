@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../../../providers/AuthProvider";
 import { supabase } from "../../../lib/supabase";
 import { toast } from "sonner";
+import { ChevronLeft } from "lucide-react";
 import SidebarBackdrop from "./SidebarBackdrop";
 import SidebarHeader from "./SidebarHeader";
 import SidebarMenu from "./SidebarMenu";
@@ -13,6 +14,7 @@ import "../../styles/user-sidebar.css";
 const VIEWS = { MENU: "menu", PROFILE: "profile", PASSWORD: "password", CONFIG: "config" };
 const STORAGE_KEY = "sena_user_prefs";
 const DEFAULT_PREFS = { email_reminders: true, status_alerts: true, advance_days: "3" };
+const HOVER_CLOSE_DELAY = 300;
 
 function loadPrefs() {
   try {
@@ -24,6 +26,9 @@ function loadPrefs() {
 }
 
 export default function Sidebar({ isOpen, onClose, appointments }) {
+  const [isHovering, setIsHovering] = useState(false);
+  const [isPanelHovering, setIsPanelHovering] = useState(false);
+  const closeTimeoutRef = useRef(null);
   const { user, profile, signOut } = useAuth();
   const [view, setView] = useState(VIEWS.MENU);
   const [profileForm, setProfileForm] = useState({ full_name: "", document_number: "" });
@@ -44,17 +49,55 @@ export default function Sidebar({ isOpen, onClose, appointments }) {
     }
   }, [isOpen, profile]);
 
+  const isSidebarVisible = isOpen || isHovering;
+
+  const clearCloseTimeout = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
+
+  const handleTriggerEnter = () => {
+    clearCloseTimeout();
+    setIsHovering(true);
+  };
+
+  const handleTriggerLeave = () => {
+    clearCloseTimeout();
+    closeTimeoutRef.current = setTimeout(() => {
+      if (!isPanelHovering) setIsHovering(false);
+    }, HOVER_CLOSE_DELAY);
+  };
+
+  const handlePanelEnter = () => {
+    clearCloseTimeout();
+    setIsPanelHovering(true);
+  };
+
+  const handlePanelLeave = () => {
+    clearCloseTimeout();
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsPanelHovering(false);
+      setIsHovering(false);
+    }, HOVER_CLOSE_DELAY);
+  };
+
   useEffect(() => {
-    if (!isOpen) return;
+    return () => clearCloseTimeout();
+  }, []);
+
+  useEffect(() => {
+    if (!isSidebarVisible) return;
     const handleKey = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [isOpen, onClose]);
+  }, [isSidebarVisible, onClose]);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    document.body.style.overflow = isSidebarVisible ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
+  }, [isSidebarVisible]);
 
   const handleProfileField = useCallback((key, value) => {
     setProfileForm((prev) => ({ ...prev, [key]: value }));
@@ -116,8 +159,23 @@ export default function Sidebar({ isOpen, onClose, appointments }) {
 
   return (
     <>
-      <SidebarBackdrop isOpen={isOpen} onClose={onClose} />
-      <div className={`user-sidebar ${isOpen ? "open" : ""}`} role="dialog" aria-modal="true" aria-label="Panel de usuario">
+      <SidebarBackdrop isOpen={isSidebarVisible} onClose={onClose} />
+      <div
+        className={`sidebar-trigger ${isSidebarVisible ? "hidden" : ""}`}
+        onMouseEnter={handleTriggerEnter}
+        onMouseLeave={handleTriggerLeave}
+        aria-hidden="true"
+      >
+        <ChevronLeft className="sidebar-trigger-icon" size={16} />
+      </div>
+      <div
+        className={`user-sidebar ${isSidebarVisible ? "open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Panel de usuario"
+        onMouseEnter={handlePanelEnter}
+        onMouseLeave={handlePanelLeave}
+      >
         <SidebarHeader profile={profile} user={user} onClose={onClose} />
         <div className="sidebar-content">
           {view === VIEWS.MENU && (

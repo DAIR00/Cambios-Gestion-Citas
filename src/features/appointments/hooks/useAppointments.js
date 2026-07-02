@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { AppointmentRepository } from "../api/appointments.repository";
 import { toast } from "sonner";
 import { useAuth } from "../../../providers/AuthProvider";
@@ -16,7 +16,16 @@ export function useAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [status, setStatus] = useState(STATUS.IDLE);
   const [error, setError] = useState(null);
+  const [searchFilters, setSearchFilters] = useState({
+    query: "",
+    documentNumber: "",
+    fullName: "",
+    dateFrom: "",
+    dateTo: "",
+    status: "",
+  });
   const { user, profile, isAprendiz } = useAuth();
+  const debounceRef = useRef(null);
 
   // FETCH: Obtener citas según el rol automáticamente
   const fetchAppointments = useCallback(
@@ -71,8 +80,69 @@ export function useAppointments() {
     [user, profile, isAprendiz],
   );
 
+  // FETCH CON BÚSQUEDA: Combina filtros de tabs + búsqueda del sidebar
+  const fetchWithSearch = useCallback(
+    async (tabFilters = {}) => {
+      setError(null);
+
+      try {
+        const roleFilters = isAprendiz()
+          ? { userId: user.id }
+          : { dependencyId: profile.dependency_id };
+
+        // Combinar filtros de tabs (status) + búsqueda (query, documentNumber, fullName, dateFrom, dateTo)
+        const combinedFilters = {
+          ...roleFilters,
+          ...tabFilters,
+          ...searchFilters,
+        };
+
+        const data = await AppointmentRepository.fetch(combinedFilters);
+        setAppointments(data);
+        return data;
+      } catch (err) {
+        setError(err.message);
+        toast.error("Error cargando citas");
+        return [];
+      }
+    },
+    [user, profile, isAprendiz, searchFilters],
+  );
+
+  // Actualizar filtros de búsqueda con debounce
+  const updateSearchFilters = useCallback((newFilters) => {
+    setSearchFilters((prev) => ({ ...prev, ...newFilters }));
+    
+    // Debounce para búsqueda de texto
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    
+    debounceRef.current = setTimeout(() => {
+      fetchWithSearch();
+    }, 300);
+  }, [fetchWithSearch]);
+
+  // Limpiar filtros de búsqueda
+  const clearSearchFilters = useCallback(() => {
+    setSearchFilters({
+      query: "",
+      documentNumber: "",
+      fullName: "",
+      dateFrom: "",
+      dateTo: "",
+      status: "",
+    });
+    fetchWithSearch();
+  }, [fetchWithSearch]);
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
   // FETCH POR PROFESIONAL: Citas de la dependencia del profesional
-  const fetchMyAppointments = async (filters = {}) => {
+  const fetchMyAppointments = useCallback(async (filters = {}) => {
     if (!profile?.dependency_id) return [];
     setError(null);
 
@@ -88,14 +158,14 @@ export function useAppointments() {
       toast.error("Error cargando citas");
       return [];
     }
-  };
+  }, [profile]);
 
   // FETCH HISTORIAL APRENDIZ: Citas previas de un aprendiz en una dependencia
   const fetchApprenticeHistory = useCallback(async (userId, dependencyId) => {
     try {
       const data = await AppointmentRepository.fetchApprenticeHistory(userId, dependencyId);
       return data;
-    } catch (err) {
+    } catch {
       toast.error("Error cargando historial");
       return [];
     }
@@ -222,5 +292,9 @@ export function useAppointments() {
     updateAppointment,
     updateStatus,
     cancelAppointment,
+    searchFilters,
+    updateSearchFilters,
+    clearSearchFilters,
+    fetchWithSearch,
   };
 }

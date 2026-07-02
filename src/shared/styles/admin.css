@@ -247,6 +247,21 @@
   color: #16a34a;
 }
 
+/* ── Dependency Badges ── */
+
+.dependency-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: color-mix(in srgb, var(--dep-color) 12%, transparent);
+  color: var(--dep-color);
+}
+
 /* ── Status Toggle ── */
 
 .status-toggle {
@@ -563,19 +578,19 @@
 
 .overview-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
 .overview-charts-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
 .overview-bottom-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
@@ -752,7 +767,7 @@
 
 .role-management {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: minmax(220px, 280px) 1fr;
   gap: 1.5rem;
   min-height: 500px;
 }
@@ -1118,29 +1133,19 @@
     grid-template-columns: 1fr;
   }
 
-  .overview-kpi-grid {
-    grid-template-columns: 1fr;
+  .admin-tabs .tab-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    gap: 0.35rem;
   }
 
-  .overview-charts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .overview-bottom-grid {
-    grid-template-columns: 1fr;
+  .admin-tabs .tab-btn .tab-label {
+    display: none;
   }
 }
 
 @media (max-width: 1024px) {
-  .overview-kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .overview-charts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .overview-bottom-grid {
+  .role-management {
     grid-template-columns: 1fr;
   }
 }
@@ -1150,15 +1155,6 @@
     padding: 2rem;
   }
 
-  .overview-kpi-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .overview-charts-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-
   .admin-table th,
   .admin-table td {
     padding: 0.85rem 1.25rem;
@@ -1166,7 +1162,7 @@
   }
 
   .role-management {
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: minmax(260px, 320px) 1fr;
   }
 
   .permissions-grid {

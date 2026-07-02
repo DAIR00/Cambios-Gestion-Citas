@@ -22,7 +22,7 @@ export class AppointmentRepository {
   }
 
   // READ: Obtener citas según filtros (RLS se encarga de seguridad)
-  static async fetch({ userId, dependencyId, professionalId, status, dateFrom, dateTo }) {
+  static async fetch({ userId, dependencyId, professionalId, status, dateFrom, dateTo, search, documentNumber, fullName }) {
     let query = supabase.from("appointments").select(`
         *,
         dependencies (name, color),
@@ -37,6 +37,14 @@ export class AppointmentRepository {
     if (status) query = query.eq("status", status);
     if (dateFrom) query = query.gte("scheduled_date", dateFrom);
     if (dateTo) query = query.lte("scheduled_date", dateTo);
+
+    // Filtros de búsqueda en perfil del aprendiz
+    if (search) {
+      query = query.or(`profiles!user_id.full_name.ilike.%${search}%,profiles!user_id.document_number.ilike.%${search}%`);
+    } else {
+      if (documentNumber) query = query.ilike("profiles!user_id.document_number", `%${documentNumber}%`);
+      if (fullName) query = query.ilike("profiles!user_id.full_name", `%${fullName}%`);
+    }
 
     // Ordenar por fecha y hora
     query = query

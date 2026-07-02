@@ -1,8 +1,8 @@
-export function KPICard ({ title, value, subtitle, trend, color }) {
+export function KPICard ({ title, value, subtitle, trend }) {
     return (
-        <div className="kpi-card" style={{ borderTop: `4px solid ${color}` }}>
+        <div className="kpi-card">
             <h3>{title}</h3>
-            <div className="kpi-value" style={{ color }}>
+            <div className="kpi-value">
                 {value}
             </div>
             {subtitle && <p className="kpi-subtitle">{subtitle}</p>}

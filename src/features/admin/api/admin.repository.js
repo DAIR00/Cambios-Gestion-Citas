@@ -48,7 +48,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "UPDATE_USER",
-            entitytype: "user",
+            entityType: "user",
             entityId: userId,
             oldData,
             newData,
@@ -79,7 +79,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "CREATE_USER",
-            entitytype: "user",
+            entityType: "user",
             entityId: authData.user.id,
             newData: profile,
         });
@@ -143,7 +143,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "UPDATE_CONFIG",
-            entitytype: "config",
+            entityType: "config",
             entityId: key,
             oldData: oldConfig,
             newData: data,
@@ -288,7 +288,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "REASSIGN_APPOINTMENT",
-            entitytype: "appointment",
+            entityType: "appointment",
             entityId: appointmentId,
             oldData,
             newData,
@@ -340,7 +340,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "CREATE_DEPENDENCY",
-            entitytype: "dependency",
+            entityType: "dependency",
             entityId: data.id,
             newData: data,
         });
@@ -368,7 +368,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "UPDATE_DEPENDENCY",
-            entitytype: "dependency",
+            entityType: "dependency",
             entityId: id,
             oldData,
             newData: data,
@@ -395,7 +395,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "DELETE_DEPENDENCY",
-            entitytype: "dependency",
+            entityType: "dependency",
             entityId: id,
             oldData,
         });
@@ -535,7 +535,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "UPDATE_ROLE_PERMISSIONS",
-            entitytype: "role",
+            entityType: "role",
             entityId: roleId,
             oldData,
             newData: data,
@@ -557,7 +557,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "CREATE_ROLE",
-            entitytype: "role",
+            entityType: "role",
             entityId: data.id,
             newData: data,
         });
@@ -585,7 +585,7 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "UPDATE_ROLE",
-            entitytype: "role",
+            entityType: "role",
             entityId: roleId,
             oldData,
             newData: data,
@@ -621,23 +621,27 @@ export class AdminRepository {
         await this.logAction({
             userId: adminId,
             action: "DELETE_ROLE",
-            entitytype: "role",
+            entityType: "role",
             entityId: roleId,
             oldData,
         });
     }
 
-    static async logAction({ userId, action, entitytype, entityId, oldData, newData }) {
+    static async logAction({ userId, action, entityType, entityId, oldData, newData }) {
         const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : null;
 
-        await supabase.from("audit_logs").insert({
+        const { error } = await supabase.from("audit_logs").insert({
             user_id: userId,
             action,
-            entity_type: entitytype,
-            entityId: entityId,
+            entity_type: entityType,
+            entity_id: entityId,
             oid_data: oldData,
-            newData: newData,
+            new_data: newData,
             user_agent: userAgent
-        })
+        });
+
+        if (error) {
+            console.error("Error logging audit action:", error.message);
+        }
     }
 }

@@ -43,25 +43,21 @@ export function AdminOverview({ onNavigate }) {
                 <KPICard
                     title="Total Usuarios"
                     value={globalStats.totalUsers}
-                    color="#3b82f6"
                     subtitle={`${globalStats.activeUsers} activos`}
                 />
                 <KPICard
                     title="Total Citas"
                     value={globalStats.totalAppointments}
-                    color="#8b5cf6"
                     subtitle="Todas las dependencias"
                 />
                 <KPICard
                     title="Tasa de Cumplimiento"
                     value={`${globalStats.completionRate}%`}
-                    color="#22c55e"
                     subtitle={`${globalStats.completedAppointments} completadas`}
                 />
                 <KPICard
                     title="Profesionales Activos"
                     value={globalStats.activeProfessionals}
-                    color="#f59e0b"
                     subtitle="Psicología + Enfermería + Trabajo Social"
                 />
             </section>
@@ -84,9 +80,8 @@ export function AdminOverview({ onNavigate }) {
                         <button
                             className="quick-action-btn"
                             onClick={() => onNavigate?.("users")}
-                            style={{ borderLeft: "4px solid #3b82f6" }}
                         >
-                            <Users size={24} color="#3b82f6" />
+                            <Users size={24} />
                             <div>
                                 <strong>Gestión de Usuarios</strong>
                                 <span>Crear, editar y administrar usuarios</span>
@@ -95,9 +90,8 @@ export function AdminOverview({ onNavigate }) {
                         <button
                             className="quick-action-btn"
                             onClick={() => onNavigate?.("reports")}
-                            style={{ borderLeft: "4px solid #22c55e" }}
                         >
-                            <FileBarChart size={24} color="#22c55e" />
+                            <FileBarChart size={24} />
                             <div>
                                 <strong>Generar Reporte</strong>
                                 <span>Reportes de citas y exportación</span>
@@ -106,9 +100,8 @@ export function AdminOverview({ onNavigate }) {
                         <button
                             className="quick-action-btn"
                             onClick={() => onNavigate?.("audit")}
-                            style={{ borderLeft: "4px solid #f59e0b" }}
                         >
-                            <ClipboardList size={24} color="#f59e0b" />
+                            <ClipboardList size={24} />
                             <div>
                                 <strong>Ver Auditoría</strong>
                                 <span>Registro de acciones del sistema</span>
@@ -117,9 +110,8 @@ export function AdminOverview({ onNavigate }) {
                         <button
                             className="quick-action-btn"
                             onClick={() => onNavigate?.("dependencies")}
-                            style={{ borderLeft: "4px solid #a855f7" }}
                         >
-                            <Building2 size={24} color="#a855f7" />
+                            <Building2 size={24} />
                             <div>
                                 <strong>Dependencias</strong>
                                 <span>Gestionar dependencias del SENA</span>

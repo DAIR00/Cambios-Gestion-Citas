@@ -57,7 +57,7 @@ export default function AdminDashboard() {
                             onClick={() => setActiveTab(tab.id)}
                         >
                             <Icon size={16} />
-                            {tab.label}
+                            <span className="tab-label">{tab.label}</span>
                         </button>
                     );
                 })}

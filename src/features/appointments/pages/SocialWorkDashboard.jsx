@@ -4,6 +4,7 @@ import { useAuth } from "../../../providers/AuthProvider";
 import { Calendar, Clock, CheckCircle, AlertCircle, TrendingUp, XCircle, User, History, Users, GitBranch, List } from "lucide-react";
 import UserAvatar from "../../../shared/components/UserAvatar";
 import UserSidebar from "../../../shared/components/UserSidebar";
+import { SearchSidebar } from "../../../shared/components/SearchSidebar";
 import { Skeleton } from "../../../shared/components/Skeleton";
 import { EmptyState } from "../../../shared/components/EmptyState";
 import { format, parseISO } from "date-fns";
@@ -25,17 +26,18 @@ const REFERRAL_SOURCES = [
 ];
 
 const FILTERS = [
-  { value: "", label: "Todas", icon: List },
-  { value: "pending", label: "Pendientes", icon: AlertCircle },
-  { value: "confirmed", label: "Confirmadas", icon: Clock },
-  { value: "completed", label: "Historial", icon: CheckCircle },
+  { value: "", label: "Todas", Icon: List },
+  { value: "pending", label: "Pendientes", Icon: AlertCircle },
+  { value: "confirmed", label: "Confirmadas", Icon: Clock },
+  { value: "completed", label: "Historial", Icon: CheckCircle },
 ];
 
 export default function SocialWorkDashboard() {
-  const { appointments, fetchMyAppointments, fetchApprenticeHistory, updateAppointment, updateStatus, isLoading } = useAppointments();
+  const { appointments, fetchMyAppointments, fetchApprenticeHistory, updateAppointment, updateStatus, isLoading, searchFilters, updateSearchFilters, clearSearchFilters, fetchWithSearch } = useAppointments();
   const { profile } = useAuth();
   const [filter, setFilter] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchSidebarOpen, setSearchSidebarOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [interventionType, setInterventionType] = useState("individual");
   const [referralSource, setReferralSource] = useState("self");
@@ -43,7 +45,20 @@ export default function SocialWorkDashboard() {
   const [historyModal, setHistoryModal] = useState(null);
   const [apprenticeHistory, setApprenticeHistory] = useState([]);
 
-  useEffect(() => { fetchMyAppointments({ status: filter }); }, [filter, profile]);
+  useEffect(() => { fetchMyAppointments({ status: filter }); }, [filter, profile, fetchMyAppointments]);
+
+  const handleSearch = () => {
+    fetchWithSearch({ status: filter });
+  };
+
+  const handleFilterChange = (newFilters) => {
+    updateSearchFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    clearSearchFilters();
+    fetchMyAppointments({ status: filter });
+  };
 
   const stats = useMemo(() => ({
     pending: appointments.filter((a) => a.status === "pending").length,
@@ -69,53 +84,67 @@ export default function SocialWorkDashboard() {
   };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div>
-          <h1>{profile?.dependencies?.name || "Trabajo Social"}</h1>
-          <p>{profile?.full_name || "Profesional"} — Panel de trabajo social</p>
-        </div>
-        <div className="header-actions">
-          <UserAvatar name={profile?.full_name} onClick={() => setSidebarOpen(true)} />
-        </div>
-      </header>
+    <div className="dashboard-layout">
+      <SearchSidebar
+        filters={searchFilters}
+        onFilterChange={handleFilterChange}
+        onClear={handleClearFilters}
+        onSearch={handleSearch}
+        isOpen={searchSidebarOpen}
+        onToggle={() => setSearchSidebarOpen(!searchSidebarOpen)}
+      />
+
+      <div className="dashboard-main">
+        <div className="dashboard-container">
+          <header className="dashboard-header">
+            <div>
+              <h1>{profile?.dependencies?.name || "Trabajo Social"}</h1>
+              <p>{profile?.full_name || "Profesional"} — Panel de trabajo social</p>
+            </div>
+            <div className="header-actions">
+              <UserAvatar name={profile?.full_name} onClick={() => setSidebarOpen(true)} />
+            </div>
+          </header>
 
       <div className="bento" style={{ marginBottom: "var(--space-md)" }}>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#b45309" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <AlertCircle size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Pendientes</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#b45309" }}>{stats.pending}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.pending}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#1d4ed8" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <Clock size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Confirmadas</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#1d4ed8" }}>{stats.confirmed}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.confirmed}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#15803d" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <CheckCircle size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Completadas</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#15803d" }}>{stats.completed}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.completed}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#7c3aed" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <TrendingUp size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Cumplimiento</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#7c3aed" }}>{completionRate}%</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{completionRate}%</div>
         </div>
       </div>
 
       <nav className="prof-filter-tabs" role="tablist">
-        {FILTERS.map(({ value, label, icon: Icon }) => (
-          <button key={value} className={`pill ${filter === value ? "pill--active" : ""}`} onClick={() => setFilter(value)} role="tab" aria-selected={filter === value}>
-            <Icon size={14} aria-hidden="true" />{label}
-            <span className="badge badge--sm" style={{ background: filter !== value ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.2)", color: filter === value ? "white" : undefined }}>
-              {value === "" ? appointments.length : stats[value]}
-            </span>
-          </button>
-        ))}
+        {FILTERS.map((f) => {
+          const FilterIcon = f.Icon;
+          return (
+            <button key={f.value} className={`pill ${filter === f.value ? "pill--active" : ""}`} onClick={() => setFilter(f.value)} role="tab" aria-selected={filter === f.value}>
+              <FilterIcon size={14} aria-hidden="true" />{f.label}
+              <span className="badge badge--sm" style={{ background: filter !== f.value ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.2)", color: filter === f.value ? "white" : undefined }}>
+                {f.value === "" ? appointments.length : stats[f.value]}
+              </span>
+            </button>
+          );
+        })}
       </nav>
 
       <div className="bento">
@@ -127,14 +156,14 @@ export default function SocialWorkDashboard() {
           </div>
         ) : (
           appointments.map((apt) => (
-            <div key={apt.id} className="card card--flat card--accent-left" style={{ "--card-accent": apt.dependencies?.color || "var(--neutral-300)" }}>
+            <div key={apt.id} className="card card--flat">
               <div className="card__header">
                 {apt.dependencies?.name && (
                   <span className="badge" style={{ background: `${apt.dependencies?.color}1a`, color: apt.dependencies?.color }}>{apt.dependencies.name}</span>
                 )}
                 <div style={{ display: "flex", gap: "var(--space-xs)", alignItems: "center", flexWrap: "wrap" }}>
                   {apt.intervention_type && (
-                    <span className="badge badge--sm" style={{ background: "#fff7ed", color: "#c2410c" }}><Users size={12} aria-hidden="true" /> {INTERVENTION_TYPES.find(t => t.value === apt.intervention_type)?.label}</span>
+                    <span className="badge badge--sm"><Users size={12} aria-hidden="true" /> {INTERVENTION_TYPES.find(t => t.value === apt.intervention_type)?.label}</span>
                   )}
                   <span className={`badge badge--${apt.status}`}>{apt.status}</span>
                 </div>
@@ -223,6 +252,8 @@ export default function SocialWorkDashboard() {
       )}
 
       <UserSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} appointments={appointments} />
+        </div>
+      </div>
     </div>
   );
 }

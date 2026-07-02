@@ -5,24 +5,39 @@ import { useAuth } from "../../../providers/AuthProvider";
 import { Calendar, Clock, CheckCircle, AlertCircle, TrendingUp, XCircle, FileText, ChevronDown, ChevronUp, List } from "lucide-react";
 import UserAvatar from "../../../shared/components/UserAvatar";
 import UserSidebar from "../../../shared/components/UserSidebar";
+import { SearchSidebar } from "../../../shared/components/SearchSidebar";
 import { Skeleton } from "../../../shared/components/Skeleton";
 import { EmptyState } from "../../../shared/components/EmptyState";
 
 const FILTERS = [
-  { value: "pending", label: "Pendientes", icon: AlertCircle },
-  { value: "confirmed", label: "Confirmadas", icon: Clock },
-  { value: "completed", label: "Historial", icon: CheckCircle },
+  { value: "pending", label: "Pendientes", Icon: AlertCircle },
+  { value: "confirmed", label: "Confirmadas", Icon: Clock },
+  { value: "completed", label: "Historial", Icon: CheckCircle },
 ];
 
 export function ProfessionalDashboard() {
-  const { appointments, fetchAppointmentsSilent, updateStatus, isLoading } = useAppointments();
+  const { appointments, fetchAppointmentsSilent, updateStatus, isLoading, searchFilters, updateSearchFilters, clearSearchFilters, fetchWithSearch } = useAppointments();
   const { profile } = useAuth();
   const [filter, setFilter] = useState("pending");
   const [notes, setNotes] = useState("");
   const [expandedCard, setExpandedCard] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchSidebarOpen, setSearchSidebarOpen] = useState(false);
 
-  useEffect(() => { fetchAppointmentsSilent({ status: filter }); }, [filter]);
+  useEffect(() => { fetchAppointmentsSilent({ status: filter }); }, [filter, fetchAppointmentsSilent]);
+
+  const handleSearch = () => {
+    fetchWithSearch({ status: filter });
+  };
+
+  const handleFilterChange = (newFilters) => {
+    updateSearchFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    clearSearchFilters();
+    fetchAppointmentsSilent({ status: filter });
+  };
 
   const stats = useMemo(() => ({
     pending: appointments.filter((a) => a.status === "pending").length,
@@ -37,53 +52,67 @@ export function ProfessionalDashboard() {
   const handleShow = (id) => updateStatus(id, "no_show");
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div>
-          <h1>{profile?.dependencies?.name || "Mi Dependencia"}</h1>
-          <p>{profile?.full_name || "Profesional"} — Gestión de citas de bienestar</p>
-        </div>
-        <div className="header-actions">
-          <UserAvatar name={profile?.full_name} onClick={() => setSidebarOpen(true)} />
-        </div>
-      </header>
+    <div className="dashboard-layout">
+      <SearchSidebar
+        filters={searchFilters}
+        onFilterChange={handleFilterChange}
+        onClear={handleClearFilters}
+        onSearch={handleSearch}
+        isOpen={searchSidebarOpen}
+        onToggle={() => setSearchSidebarOpen(!searchSidebarOpen)}
+      />
+
+      <div className="dashboard-main">
+        <div className="dashboard-container">
+          <header className="dashboard-header">
+            <div>
+              <h1>{profile?.dependencies?.name || "Mi Dependencia"}</h1>
+              <p>{profile?.full_name || "Profesional"} — Gestión de citas de bienestar</p>
+            </div>
+            <div className="header-actions">
+              <UserAvatar name={profile?.full_name} onClick={() => setSidebarOpen(true)} />
+            </div>
+          </header>
 
       <div className="bento" style={{ marginBottom: "var(--space-md)" }}>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#b45309" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <AlertCircle size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Pendientes</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#b45309" }}>{stats.pending}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.pending}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#1d4ed8" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <Clock size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Confirmadas</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#1d4ed8" }}>{stats.confirmed}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.confirmed}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#15803d" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <CheckCircle size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Completadas</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#15803d" }}>{stats.completed}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.completed}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#7c3aed" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <TrendingUp size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Cumplimiento</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#7c3aed" }}>{completionRate}%</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{completionRate}%</div>
         </div>
       </div>
 
       <nav className="prof-filter-tabs" role="tablist">
-        {FILTERS.map(({ value, label, icon: Icon }) => (
-          <button key={value} className={`pill ${filter === value ? "pill--active" : ""}`} onClick={() => setFilter(value)} role="tab" aria-selected={filter === value}>
-            <Icon size={14} aria-hidden="true" />{label}
-            <span className="badge badge--sm" style={{ background: filter !== value ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.2)", color: filter === value ? "white" : undefined }}>
-              {stats[value]}
-            </span>
-          </button>
-        ))}
+        {FILTERS.map((f) => {
+          const FilterIcon = f.Icon;
+          return (
+            <button key={f.value} className={`pill ${filter === f.value ? "pill--active" : ""}`} onClick={() => setFilter(f.value)} role="tab" aria-selected={filter === f.value}>
+              <FilterIcon size={14} aria-hidden="true" />{f.label}
+              <span className="badge badge--sm" style={{ background: filter !== f.value ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.2)", color: filter === f.value ? "white" : undefined }}>
+                {stats[f.value]}
+              </span>
+            </button>
+          );
+        })}
       </nav>
 
       <div className="bento">
@@ -111,7 +140,7 @@ export function ProfessionalDashboard() {
 
               {expandedCard === apt.id && (
                 <div style={{ padding: "var(--space-sm) var(--space-lg)", background: "var(--neutral-50)", fontSize: "var(--text-small)" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-xs) var(--space-lg)" }}>
+                  <div className="detail-grid">
                     <div><span style={{ color: "var(--text-muted)" }}>Motivo: </span>{apt.reason || "No especificado"}</div>
                     <div><span style={{ color: "var(--text-muted)" }}>Dependencia: </span>
                       <span className="badge badge--sm" style={{ background: `${apt.dependencies?.color}1a`, color: apt.dependencies?.color }}>{apt.dependencies?.name || "-"}</span>
@@ -141,6 +170,8 @@ export function ProfessionalDashboard() {
       </div>
 
       <UserSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} appointments={appointments} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useAuth } from "../../../providers/AuthProvider";
 import { Calendar, Clock, CheckCircle, AlertCircle, TrendingUp, XCircle, User, History, Stethoscope, Thermometer, Heart, Activity, List } from "lucide-react";
 import UserAvatar from "../../../shared/components/UserAvatar";
 import UserSidebar from "../../../shared/components/UserSidebar";
+import { SearchSidebar } from "../../../shared/components/SearchSidebar";
 import { Skeleton } from "../../../shared/components/Skeleton";
 import { EmptyState } from "../../../shared/components/EmptyState";
 import { format, parseISO } from "date-fns";
@@ -17,24 +18,38 @@ const ATTENTION_TYPES = [
 ];
 
 const FILTERS = [
-  { value: "", label: "Todas", icon: List },
-  { value: "pending", label: "Pendientes", icon: AlertCircle },
-  { value: "confirmed", label: "Confirmadas", icon: Clock },
-  { value: "completed", label: "Historial", icon: CheckCircle },
+  { value: "", label: "Todas", Icon: List },
+  { value: "pending", label: "Pendientes", Icon: AlertCircle },
+  { value: "confirmed", label: "Confirmadas", Icon: Clock },
+  { value: "completed", label: "Historial", Icon: CheckCircle },
 ];
 
 export default function NursingDashboard() {
-  const { appointments, fetchMyAppointments, fetchApprenticeHistory, updateAppointment, updateStatus, isLoading } = useAppointments();
+  const { appointments, fetchMyAppointments, fetchApprenticeHistory, updateAppointment, updateStatus, isLoading, searchFilters, updateSearchFilters, clearSearchFilters, fetchWithSearch } = useAppointments();
   const { profile } = useAuth();
   const [filter, setFilter] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchSidebarOpen, setSearchSidebarOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [attentionType, setAttentionType] = useState("control");
   const [vitals, setVitals] = useState({ temperature: "", blood_pressure: "", heart_rate: "", weight: "" });
   const [historyModal, setHistoryModal] = useState(null);
   const [apprenticeHistory, setApprenticeHistory] = useState([]);
 
-  useEffect(() => { fetchMyAppointments({ status: filter }); }, [filter, profile]);
+  useEffect(() => { fetchMyAppointments({ status: filter }); }, [filter, profile, fetchMyAppointments]);
+
+  const handleSearch = () => {
+    fetchWithSearch({ status: filter });
+  };
+
+  const handleFilterChange = (newFilters) => {
+    updateSearchFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    clearSearchFilters();
+    fetchMyAppointments({ status: filter });
+  };
 
   const stats = useMemo(() => ({
     pending: appointments.filter((a) => a.status === "pending").length,
@@ -60,53 +75,67 @@ export default function NursingDashboard() {
   };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div>
-          <h1>{profile?.dependencies?.name || "Enfermería"}</h1>
-          <p>{profile?.full_name || "Profesional"} — Panel de atención de enfermería</p>
-        </div>
-        <div className="header-actions">
-          <UserAvatar name={profile?.full_name} onClick={() => setSidebarOpen(true)} />
-        </div>
-      </header>
+    <div className="dashboard-layout">
+      <SearchSidebar
+        filters={searchFilters}
+        onFilterChange={handleFilterChange}
+        onClear={handleClearFilters}
+        onSearch={handleSearch}
+        isOpen={searchSidebarOpen}
+        onToggle={() => setSearchSidebarOpen(!searchSidebarOpen)}
+      />
+
+      <div className="dashboard-main">
+        <div className="dashboard-container">
+          <header className="dashboard-header">
+            <div>
+              <h1>{profile?.dependencies?.name || "Enfermería"}</h1>
+              <p>{profile?.full_name || "Profesional"} — Panel de atención de enfermería</p>
+            </div>
+            <div className="header-actions">
+              <UserAvatar name={profile?.full_name} onClick={() => setSidebarOpen(true)} />
+            </div>
+          </header>
 
       <div className="bento" style={{ marginBottom: "var(--space-md)" }}>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#b45309" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <AlertCircle size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Pendientes</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#b45309" }}>{stats.pending}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.pending}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#1d4ed8" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <Clock size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Confirmadas</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#1d4ed8" }}>{stats.confirmed}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.confirmed}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#15803d" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <CheckCircle size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Completadas</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#15803d" }}>{stats.completed}</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{stats.completed}</div>
         </div>
-        <div className="card card--flat card--accent-left" style={{ "--card-accent": "#7c3aed" }}>
+        <div className="card card--flat">
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", marginBottom: "var(--space-xs)" }}>
             <TrendingUp size={16} aria-hidden="true" /><span style={{ fontSize: "var(--text-small)", color: "var(--text-secondary)" }}>Cumplimiento</span>
           </div>
-          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700, color: "#7c3aed" }}>{completionRate}%</div>
+          <div style={{ fontSize: "var(--text-h1)", fontWeight: 700 }}>{completionRate}%</div>
         </div>
       </div>
 
       <nav className="prof-filter-tabs" role="tablist">
-        {FILTERS.map(({ value, label, icon: Icon }) => (
-          <button key={value} className={`pill ${filter === value ? "pill--active" : ""}`} onClick={() => setFilter(value)} role="tab" aria-selected={filter === value}>
-            <Icon size={14} aria-hidden="true" />{label}
-            <span className="badge badge--sm" style={{ background: filter !== value ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.2)", color: filter === value ? "white" : undefined }}>
-              {value === "" ? appointments.length : stats[value]}
-            </span>
-          </button>
-        ))}
+        {FILTERS.map((f) => {
+          const FilterIcon = f.Icon;
+          return (
+            <button key={f.value} className={`pill ${filter === f.value ? "pill--active" : ""}`} onClick={() => setFilter(f.value)} role="tab" aria-selected={filter === f.value}>
+              <FilterIcon size={14} aria-hidden="true" />{f.label}
+              <span className="badge badge--sm" style={{ background: filter !== f.value ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.2)", color: filter === f.value ? "white" : undefined }}>
+                {f.value === "" ? appointments.length : stats[f.value]}
+              </span>
+            </button>
+          );
+        })}
       </nav>
 
       <div className="bento">
@@ -118,14 +147,14 @@ export default function NursingDashboard() {
           </div>
         ) : (
           appointments.map((apt) => (
-            <div key={apt.id} className="card card--flat card--accent-left" style={{ "--card-accent": apt.dependencies?.color || "var(--neutral-300)" }}>
+            <div key={apt.id} className="card card--flat">
               <div className="card__header">
                 {apt.dependencies?.name && (
                   <span className="badge" style={{ background: `${apt.dependencies?.color}1a`, color: apt.dependencies?.color }}>{apt.dependencies.name}</span>
                 )}
                 <div style={{ display: "flex", gap: "var(--space-xs)", alignItems: "center", flexWrap: "wrap" }}>
                   {apt.attention_type && (
-                    <span className="badge badge--sm" style={{ background: "#f3e8ff", color: "#6b21a8" }}><Stethoscope size={12} aria-hidden="true" /> {ATTENTION_TYPES.find(t => t.value === apt.attention_type)?.label}</span>
+                    <span className="badge badge--sm"><Stethoscope size={12} aria-hidden="true" /> {ATTENTION_TYPES.find(t => t.value === apt.attention_type)?.label}</span>
                   )}
                   <span className={`badge badge--${apt.status}`}>{apt.status}</span>
                 </div>
@@ -149,10 +178,10 @@ export default function NursingDashboard() {
 
               {(apt.temperature || apt.blood_pressure) && (
                 <div className="card__body" style={{ marginTop: "var(--space-xs)", display: "flex", gap: "var(--space-sm)", flexWrap: "wrap" }}>
-                  {apt.temperature && <span className="badge badge--sm" style={{ background: "#dcfce7", color: "#15803d" }}><Thermometer size={10} aria-hidden="true" /> {apt.temperature}°C</span>}
-                  {apt.blood_pressure && <span className="badge badge--sm" style={{ background: "#dbeafe", color: "#1d4ed8" }}><Activity size={10} aria-hidden="true" /> {apt.blood_pressure}</span>}
-                  {apt.heart_rate && <span className="badge badge--sm" style={{ background: "#fef3c7", color: "#b45309" }}><Heart size={10} aria-hidden="true" /> {apt.heart_rate} lpm</span>}
-                  {apt.weight && <span className="badge badge--sm" style={{ background: "#f3f4f6", color: "#4a5064" }}>Peso: {apt.weight} kg</span>}
+                  {apt.temperature && <span className="badge badge--sm"><Thermometer size={10} aria-hidden="true" /> {apt.temperature}°C</span>}
+                  {apt.blood_pressure && <span className="badge badge--sm"><Activity size={10} aria-hidden="true" /> {apt.blood_pressure}</span>}
+                  {apt.heart_rate && <span className="badge badge--sm"><Heart size={10} aria-hidden="true" /> {apt.heart_rate} lpm</span>}
+                  {apt.weight && <span className="badge badge--sm">Peso: {apt.weight} kg</span>}
                 </div>
               )}
 
@@ -218,6 +247,8 @@ export default function NursingDashboard() {
       )}
 
       <UserSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} appointments={appointments} />
+        </div>
+      </div>
     </div>
   );
 }

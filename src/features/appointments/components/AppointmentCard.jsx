@@ -16,8 +16,7 @@ export function AppointmentCard({ appointment, onCancel, isAprendiz }) {
 
   return (
     <div
-      className="card card--flat card--accent-left"
-      style={{ "--card-accent": dependencies?.color || "var(--neutral-300)" }}
+      className="card card--flat"
     >
       <div className="card__header">
         {dependencies?.name && (

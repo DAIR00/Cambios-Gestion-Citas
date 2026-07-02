@@ -170,11 +170,22 @@ export function UserManagement() {
                                         </div>
                                     </td>
                                     <td>
-                                        <span className={`role-badge ${u.roles?.name?.toLowerCase() || ""}`}>
+                                        <span className={`role-badge ${u.roles?.name?.toLowerCase().replace(/\s+/g, "_") || ""}`}>
                                             {u.roles?.name}
                                         </span>
                                     </td>
-                                    <td>{u.dependencies?.name || "-"}</td>
+                                    <td>
+                                        {u.dependencies ? (
+                                            <span
+                                                className="dependency-badge"
+                                                style={{
+                                                    "--dep-color": u.dependencies.color,
+                                                }}
+                                            >
+                                                {u.dependencies.name}
+                                            </span>
+                                        ) : "-"}
+                                    </td>
                                     <td>
                                         <button
                                             onClick={() => toggleUserStatus(u)}

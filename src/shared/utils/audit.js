@@ -8,7 +8,7 @@ export async function logAction({ userId, action, entityType, entityId, oldData,
         action,
         entity_type: entityType,
         entity_id: entityId,
-        old_data: oldData,
+        oid_data: oldData,
         new_data: newData,
         user_agent: userAgent,
     });

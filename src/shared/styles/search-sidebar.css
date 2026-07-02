@@ -1,0 +1,284 @@
+/* ==========================================
+   Search Sidebar — Left Panel
+   Professional dashboard search/filter
+   ========================================== */
+
+/* Toggle button */
+.search-sidebar-toggle {
+  position: fixed;
+  bottom: var(--space-xl);
+  left: var(--space-xl);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--sena-green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-green-lg);
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+
+.search-sidebar-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 30px rgba(57, 169, 0, 0.4);
+}
+
+/* Main sidebar */
+.search-sidebar {
+  position: sticky;
+  top: 0;
+  width: 300px;
+  min-width: 300px;
+  height: 100vh;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+/* Hide sidebar on desktop when closed */
+@media (min-width: 1025px) {
+  .search-sidebar:not(.search-sidebar--open) {
+    display: none;
+  }
+}
+
+/* Header */
+.search-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.search-sidebar__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.search-sidebar__title svg {
+  color: var(--sena-green);
+}
+
+.search-sidebar__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--neutral-100);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.search-sidebar__close:hover {
+  background: var(--neutral-200);
+  color: var(--text-primary);
+}
+
+/* Scrollable body */
+.search-sidebar__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Field */
+.search-sidebar__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.search-sidebar__label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.search-sidebar__label svg {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.search-sidebar__input,
+.search-sidebar__select {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-card);
+  transition:
+    border-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.search-sidebar__input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-sidebar__input:focus,
+.search-sidebar__select:focus {
+  outline: none;
+  border-color: var(--sena-green);
+  box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+}
+
+.search-sidebar__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237c8399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+/* Divider */
+.search-sidebar__divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: var(--space-xs) 0;
+}
+
+/* Footer */
+.search-sidebar__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-card);
+}
+
+.search-sidebar__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 0.65rem var(--space-md);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-spring);
+  width: 100%;
+}
+
+.search-sidebar__btn--primary {
+  background: var(--sena-green);
+  color: white;
+  box-shadow: var(--shadow-card-sm);
+}
+
+.search-sidebar__btn--primary:hover {
+  background: var(--sena-green-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-green);
+}
+
+.search-sidebar__btn--secondary {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.search-sidebar__btn--secondary:hover {
+  background: var(--neutral-100);
+  color: var(--text-primary);
+  border-color: var(--neutral-300);
+}
+
+/* Layout wrapper for dashboard + sidebar */
+.dashboard-layout {
+  display: flex;
+  gap: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.dashboard-main {
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .search-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100vh;
+    z-index: var(--z-sidebar);
+    transform: translateX(-100%);
+    transition: transform var(--duration-normal) var(--ease-out);
+    box-shadow: var(--shadow-sidebar);
+  }
+
+  .search-sidebar--open {
+    transform: translateX(0);
+  }
+
+  /* Backdrop */
+  .search-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: calc(var(--z-sidebar) - 1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-normal) var(--ease-smooth);
+  }
+
+  .search-sidebar-backdrop--open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .search-sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+}
+
+@media (min-width: 1441px) {
+  .search-sidebar {
+    width: 320px;
+    min-width: 320px;
+  }
+}

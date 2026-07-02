@@ -77,7 +77,7 @@ export default function CoordinationDashboard() {
           aria-selected={activeTab === "dashboard"}
         >
           <Calendar size={18} aria-hidden="true" />
-          Dashboard
+          <span className="tab-label">Dashboard</span>
         </button>
         <button
           className={`tab-btn ${activeTab === "reports" ? "active" : ""}`}
@@ -86,7 +86,7 @@ export default function CoordinationDashboard() {
           aria-selected={activeTab === "reports"}
         >
           <FileBarChart size={18} aria-hidden="true" />
-          Reportes
+          <span className="tab-label">Reportes</span>
         </button>
       </nav>
 
@@ -101,10 +101,10 @@ export default function CoordinationDashboard() {
 
           {kpis && (
             <div className="bento" style={{ marginBottom: "var(--space-md)" }}>
-              <KPICard title="Total Citas" value={kpis.total_appointments} color="var(--color-info)" subtitle="En periodo seleccionado" />
-              <KPICard title="Tasa de Cumplimiento" value={kpis.total_appointments > 0 ? `${Math.round((kpis.completed_appointments / kpis.total_appointments) * 100)}%` : "0%"} color="var(--color-success)" subtitle={`${kpis.completed_appointments} completadas`} />
-              <KPICard title="Tiempo Promedio" value={`${Math.round(kpis.avg_wait_days || 0)} días`} color="var(--color-warning)" subtitle="Solicitud a atención" />
-              <KPICard title="No Asistencias" value={kpis.no_show_count} color="var(--color-error)" subtitle={kpis.total_appointments > 0 ? `${Math.round((kpis.no_show_count / kpis.total_appointments) * 100)}% del total` : "0%"} />
+              <KPICard title="Total Citas" value={kpis.total_appointments} subtitle="En periodo seleccionado" />
+              <KPICard title="Tasa de Cumplimiento" value={kpis.total_appointments > 0 ? `${Math.round((kpis.completed_appointments / kpis.total_appointments) * 100)}%` : "0%"} subtitle={`${kpis.completed_appointments} completadas`} />
+              <KPICard title="Tiempo Promedio" value={`${Math.round(kpis.avg_wait_days || 0)} días`} subtitle="Solicitud a atención" />
+              <KPICard title="No Asistencias" value={kpis.no_show_count} subtitle={kpis.total_appointments > 0 ? `${Math.round((kpis.no_show_count / kpis.total_appointments) * 100)}% del total` : "0%"} />
             </div>
           )}
 

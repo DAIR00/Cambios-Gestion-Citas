@@ -14,6 +14,7 @@
 @import "./professional.css";
 @import "./admin.css";
 @import "./user-sidebar.css";
+@import "./search-sidebar.css";
 
 *, *::before, *::after {
   margin: 0;

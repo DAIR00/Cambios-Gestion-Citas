@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guia de Testing - Gestion de Citas SENA</title>
+<style>
+  @media print {
+    body { margin: 0; }
+    pre { page-break-inside: avoid; }
+    table { page-break-inside: avoid; }
+    h2 { page-break-before: auto; }
+  }
+  body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 22px; color: #39a900; border-bottom: 2px solid #39a900; padding-bottom: 8px; margin-top: 30px; }
+  h2 { font-size: 16px; color: #2d7a00; margin-top: 24px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 13px; color: #333; margin-top: 16px; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: 'Consolas', 'Courier New', monospace; }
+  pre { background: #1e1e1e; color: #d4d4d4; border-radius: 6px; padding: 12px; overflow-x: auto; font-size: 11px; line-height: 1.4; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 11px; }
+  th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; }
+  th { background: #39a900; color: white; font-weight: 600; }
+  tr:nth-child(even) { background: #f9f9f9; }
+  ul { padding-left: 22px; }
+  li { margin: 3px 0; }
+  blockquote { border-left: 4px solid #39a900; margin: 10px 0; padding: 8px 12px; background: #f0fff0; font-style: italic; font-size: 11px; }
+  hr { border: none; border-top: 2px solid #eee; margin: 20px 0; }
+  strong { color: #1a1a1a; }
+</style>
+</head>
+<body>
+<h1>Guía de Testing - Gestión de Citas SENA</h1><h2>Descripción General</h2><p>Este proyecto utiliza una estrategia de testing dual:</p><ul>
+<li><strong>Unit Tests</strong> con <strong>Vitest</strong> + <strong>Testing Library</strong> para probar lógica aislada, hooks, repositorios, schemas y componentes UI.</li>
+<li><strong>E2E Tests</strong> con <strong>Playwright</strong> para probar flujos completos de usuario en el navegador.</li>
+</ul>
+<hr><h2>Configuración del Entorno</h2><h3>Dependencias instaladas</h3><pre><code class="bash"># Unit testing
+npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom @vitest/coverage-v8</p><h1>E2E testing</h1>
+npm install @playwright/test
+</code></pre><h3>Archivos de configuración</h3><table>
+<tr><th>Archivo</th><th>Propósito</th></tr>
+<tr><td><code>vite.config.js</code></td><td>Configuración de Vitest (environment, setup, coverage, include pattern)</td></tr>
+<tr><td><code>playwright.config.js</code></td><td>Configuración de Playwright (baseURL, proyectos, webServer)</td></tr>
+<tr><td><code>src/test/setup.js</code></td><td>Setup global de Vitest (imports de jest-dom)</td></tr>
+<tr><td><code>src/test/test-utils.jsx</code></td><td>Utilidades de renderizado con providers mock</td></tr>
+<tr><td><code>src/mocks/supabase.mock.js</code></td><td>Mock del cliente Supabase para unit tests</td></tr>
+</table>
+<h3>Configuración de Vitest</h3><p>Vitest está configurado para ejecutar solo archivos dentro de <code>src/</code>:
+<pre><code class="js">// vite.config.js
+test: {
+  include: ["src/<em>*/</em>.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+  // Esto excluye los tests E2E de Playwright en tests/e2e/
+}
+</code></pre><hr><h2>Cómo Ejecutar los Tests</h2><h3>Unit Tests (Vitest)</h3><pre><code class="bash"># Ejecutar todos los unit tests una vez
+npm run test</p><h1>Ejecutar en modo watch (re-ejecuta al guardar archivos)</h1>
+npm run test:watch</p><h1>Ejecutar con reporte de cobertura</h1>
+npm run test:coverage
+</code></pre><h3>E2E Tests (Playwright)</h3><pre><code class="bash"># Instalar navegadores de Playwright (primera vez)
+npm run test:install</p><h1>Ejecutar todos los tests E2E</h1>
+npm run test:e2e</p><h1>Ejecutar con UI interactiva de Playwright</h1>
+npm run test:e2e:ui</p><h1>Ver reporte HTML de los resultados</h1>
+npm run test:report
+</code></pre><blockquote><strong>Nota:</strong> Los tests E2E requieren el servidor de desarrollo corriendo. Playwright está configurado para levantarlo automáticamente.</blockquote><hr><h2>Estructura de Carpetas de Testing</h2><pre><code class="">src/
+  features/
+    [feature]/
+      __tests__/
+        *.test.jsx       # Tests de componentes
+        *.test.js        # Tests de hooks/repositorios/schemas
+  shared/
+    __tests__/
+      *.test.jsx         # Tests de componentes compartidos
+  providers/
+    AuthProvider.test.jsx
+  routes/
+    ProtectedRoute.test.jsx
+  mocks/
+    supabase.mock.js     # Mock de Supabase
+  test/
+    setup.js             # Setup de Vitest
+    test-utils.jsx       # Utilidades de testing</p><p>tests/
+  e2e/
+    auth.spec.js         # Tests E2E de autenticación
+    navigation.spec.js   # Tests E2E de navegación y RBAC
+    appointments.spec.js # Tests E2E de citas
+    coordination.spec.js # Tests E2E de dashboard de coordinación
+    admin.spec.js        # Tests E2E de panel admin
+</code></pre><hr><h2>Convenciones de Naming</h2><h3>Unit Tests</h3>
+<ul>
+<li>Archivos: <code><em>.test.js</code> (lógica) o <code></em>.test.jsx</code> (componentes)</li>
+<li>Suites: <code>describe("NombreDelMódulo", () => { ... })</code></li>
+<li>Tests: <code>it("descripción del comportamiento esperado", () => { ... })</code></li>
+</ul>
+<h3>E2E Tests</h3>
+<ul>
+<li>Archivos: <code>*.spec.js</code></li>
+<li>Suites: <code>test.describe("Nombre de la Feature", () => { ... })</code></li>
+<li>Tests: <code>test("descripción del flujo", async ({ page }) => { ... })</code></li>
+</ul>
+<hr><h2>Mocking de Supabase</h2><p>Todas las llamadas a Supabase se mockean usando <code>src/mocks/supabase.mock.js</code>:</p><pre><code class="javascript">import { supabaseMock, resetMocks } from "../../mocks/supabase.mock";</p><p>beforeEach(() =&gt; {
+  resetMocks();
+});</p><p>it("retorna datos", async () =&gt; {
+  const chain = {
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    then: vi.fn((resolve) =&gt; resolve({ data: [...], error: null })),
+  };
+  supabaseMock.from.mockReturnValue(chain);</p><p>  const result = await MiRepositorio.getData();
+  expect(result).toEqual([...]);
+});
+</code></pre><h3>Patrón para tests de hooks con renderHook</h3><pre><code class="javascript">import { renderHook, act } from "@testing-library/react";
+import { supabaseMock, resetMocks } from "../../../../mocks/supabase.mock";</p><p>vi.mock("../../../../lib/supabase", () =&gt; ({ supabase: supabaseMock }));
+vi.mock("../../../../providers/AuthProvider", () =&gt; ({ useAuth: vi.fn() }));</p><p>import { useAuth } from "../../../../providers/AuthProvider";</p><p>beforeEach(() =&gt; {
+  resetMocks();
+  vi.clearAllMocks();
+  useAuth.mockReturnValue({ user: { id: "u1" }, profile: { role_id: 6 }, isAprendiz: () =&gt; true });
+});</p><p>it("fetch data", async () =&gt; {
+  supabaseMock.from.mockReturnValue({
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
+    or: vi.fn().mockReturnThis(),
+    ilike: vi.fn().mockReturnThis(),
+    gte: vi.fn().mockReturnThis(),
+    lte: vi.fn().mockReturnThis(),
+    then: vi.fn((resolve) =&gt; resolve({ data: [...], error: null })),
+  });</p><p>  const { result } = renderHook(() =&gt; useMiHook());
+  await act(async () =&gt; {
+    await result.current.fetchData();
+  });
+  expect(result.current.data).toEqual([...]);
+});
+</code></pre><hr><h2>Guía para Agregar Nuevos Tests</h2><h3>1. Test de Schema Zod</h3><pre><code class="javascript">import { appointmentSchema } from "./appointment.schema";</p><p>it("rechaza valor inválido", () =&gt; {
+  const result = appointmentSchema.safeParse({ campo: "valor" });
+  expect(result.success).toBe(false);
+});
+</code></pre><h3>2. Test de Repositorio</h3><pre><code class="javascript">import { supabaseMock, resetMocks } from "../../../../mocks/supabase.mock";
+import { MiRepositorio } from "./mi.repositorio";</p><p>beforeEach(() =&gt; resetMocks());</p><p>it("retorna datos", async () =&gt; {
+  supabaseMock.from.mockReturnValue({
+    select: vi.fn().mockReturnThis(),
+    then: vi.fn((resolve) =&gt; resolve({ data: [...], error: null })),
+  });
+  const result = await MiRepositorio.getAll();
+  expect(result).toEqual([...]);
+});
+</code></pre><h3>3. Test de Componente</h3><pre><code class="javascript">import { render, screen } from "@testing-library/react";
+import { MiComponente } from "../MiComponente";</p><p>it("renderiza el título", () =&gt; {
+  render(&lt;MiComponente title="Test" /&gt;);
+  expect(screen.getByText("Test")).toBeInTheDocument();
+});
+</code></pre><h3>4. Test de Hook</h3><pre><code class="javascript">import { renderHook, act } from "@testing-library/react";</p><p>it("actualiza estado", async () =&gt; {
+  const { result } = renderHook(() =&gt; useMiHook());
+  act(() =&gt; {
+    result.current.doSomething();
+  });
+  expect(result.current.state).toBe("expected");
+});
+</code></pre><h3>5. Test E2E</h3><pre><code class="javascript">import { test, expect } from "@playwright/test";</p><p>test("flujo de usuario", async ({ page }) =&gt; {
+  await page.goto("/ruta");
+  await expect(page.getByText("Elemento")).toBeVisible();
+});
+</code></pre><hr><h2>Pitfall Comunes</h2><h3>1. Mock de vi.mock y variables hoisted</h3>
+<code>vi.mock</code> se ejecuta antes que cualquier import. No se puede acceder a variables definidas después:</p><pre><code class="javascript">// MAL - ReferenceError
+const supabaseMock = { from: vi.fn() };
+vi.mock("...", () =&gt; ({ supabase: supabaseMock }));</p><p>// BIEN - usar vi.hoisted
+const { supabaseMock } = vi.hoisted(() =&gt; ({
+  supabaseMock: { from: vi.fn() },
+}));
+vi.mock("...", () =&gt; ({ supabase: supabaseMock }));
+</code></pre><h3>2. Cadenas mock de Supabase</h3>
+Supabase usa encadenamiento fluido. Cada método debe retornar <code>this</code>:</p><pre><code class="javascript">supabaseMock.from.mockReturnValue({
+  select: vi.fn().mockReturnThis(),
+  eq: vi.fn().mockReturnThis(),
+  then: vi.fn((resolve) =&gt; resolve({ data: [], error: null })),
+});
+</code></pre><h3>3. Hooks que llaman fetchRoles después de una operación</h3>
+Al testear <code>createRole</code>, <code>updateRole</code>, <code>deleteRole</code> en <code>useAdmin</code>, la función
+interna llama <code>fetchRoles()</code> que necesita mocks adicionales:</p><pre><code class="javascript">supabaseMock.from
+  .mockReturnValueOnce(/<em> createRole insert </em>/)
+  .mockReturnValueOnce(/<em> logAction audit </em>/)
+  .mockReturnValueOnce(/<em> fetchRoles → roles part </em>/)
+  .mockReturnValueOnce(/<em> fetchRoles → profiles part </em>/);
+</code></pre><h3>4. Hooks que usan estado interno</h3>
+<code>cancelAppointment</code> busca en <code>appointments</code> del estado. Primero haz <code>fetchAppointments()</code>
+para poblar el estado, luego cancela.</p><h3>5. Memoria insuficiente en Windows</h3>
+Si los tests tardan demasiado o crashean, aumentar la memoria:
+<pre><code class="bash">NODE_OPTIONS="--max-old-space-size=8192" npx vitest run
+</code></pre><hr><h2>Cobertura Mínima Esperada</h2><table>
+<tr><th>Métrica</th><th>Umbral</th></tr>
+<tr><td>Líneas</td><td>≥ 70%</td></tr>
+<tr><td>Funciones</td><td>≥ 70%</td></tr>
+<tr><td>Branches</td><td>≥ 70%</td></tr>
+<tr><td>Statements</td><td>≥ 70%</td></tr>
+</table>
+<hr><h2>Variables de Entorno para E2E</h2><p>Para tests E2E que requieren autenticación, configurar las siguientes variables de entorno:</p><pre><code class="bash"># Credenciales de aprendiz
+TEST_USER_EMAIL=aprendiz@test.com
+TEST_USER_PASSWORD=password123</p><h1>Credenciales de coordinador</h1>
+TEST_COORD_EMAIL=coordinador@test.com
+TEST_COORD_PASSWORD=password123</p><h1>Credenciales de admin</h1>
+TEST_ADMIN_EMAIL=admin@test.com
+TEST_ADMIN_PASSWORD=password123
+</code></pre><p>Si no están configurados, los tests que requieren autenticación se saltan automáticamente con <code>test.skip()</code>.</p><hr><h2>Resumen de Tests Creados</h2><h3>Unit Tests (Vitest) — 214 tests, 16 archivos</h3><table>
+<tr><th>Archivo</th><th>Tests</th><th>Cobertura</th></tr>
+<tr><td><code>appointment.schema.test.js</code></td><td>27</td><td>Schema Zod completo</td></tr>
+<tr><td><code>appointments.repository.test.js</code></td><td>18</td><td>CRUD de citas</td></tr>
+<tr><td><code>admin.repository.test.js</code></td><td>26</td><td>Gestión admin completa</td></tr>
+<tr><td><code>dashboard.repository.test.js</code></td><td>10</td><td>KPIs, gráficos, export</td></tr>
+<tr><td><code>audit.test.js</code></td><td>4</td><td>Logging de auditoría</td></tr>
+<tr><td><code>AuthProvider.test.jsx</code></td><td>37</td><td>RBAC y auth functions</td></tr>
+<tr><td><code>ProtectedRoute.test.jsx</code></td><td>8</td><td>Guard de rutas</td></tr>
+<tr><td><code>UserAvatar.test.jsx</code></td><td>12</td><td>Avatar de usuario</td></tr>
+<tr><td><code>EmptyState.test.jsx</code></td><td>10</td><td>Estado vacío</td></tr>
+<tr><td><code>Skeleton.test.jsx</code></td><td>9</td><td>Skeleton loader</td></tr>
+<tr><td><code>KPICard.test.jsx</code></td><td>10</td><td>Tarjeta KPI</td></tr>
+<tr><td><code>AppointmentCard.test.jsx</code></td><td>14</td><td>Tarjeta de cita</td></tr>
+<tr><td><code>AppointmentForm.test.jsx</code></td><td>6</td><td>Formulario de citas</td></tr>
+<tr><td><code>useAppointments.test.js</code></td><td>11</td><td>Hook de citas</td></tr>
+<tr><td><code>useReports.test.js</code></td><td>7</td><td>Hook de reportes</td></tr>
+<tr><td><code>useAdmin.test.js</code></td><td>11</td><td>Hook admin</td></tr>
+<tr><td><code>useDashboard.test.js</code></td><td>2</td><td>Hook dashboard</td></tr>
+</table>
+<h3>E2E Tests (Playwright) — ~28 tests, 5 archivos</h3><table>
+<tr><th>Archivo</th><th>Tests</th><th>Cobertura</th></tr>
+<tr><td><code>auth.spec.js</code></td><td>8</td><td>Login, registro, recuperación</td></tr>
+<tr><td><code>navigation.spec.js</code></td><td>8</td><td>RBAC, 404, rutas protegidas</td></tr>
+<tr><td><code>appointments.spec.js</code></td><td>4</td><td>Flujo de citas</td></tr>
+<tr><td><code>coordination.spec.js</code></td><td>3</td><td>Dashboard coordinación</td></tr>
+<tr><td><code>admin.spec.js</code></td><td>5</td><td>Panel admin</td></tr>
+</table>
+<hr><h2>Comandos Útiles</h2><pre><code class="bash"># Ejecutar un archivo específico
+npx vitest run src/features/appointments/validations/appointment.schema.test.js</p><h1>Ejecutar tests que coincidan con un patrón</h1>
+npx vitest run -t "dependency_id"</p><h1>Ejecutar Playwright solo en Chromium</h1>
+npx playwright test --project=chromium</p><h1>Ejecutar un archivo E2E específico</h1>
+npx playwright test tests/e2e/auth.spec.js</p><h1>Generar reporte de cobertura</h1>
+npm run test:coverage</p><h1>Ejecutar con más memoria (Windows)</h1>
+NODE_OPTIONS="--max-old-space-size=8192" npm run test
+</code></pre>
+</p>
+</body>
+</html>

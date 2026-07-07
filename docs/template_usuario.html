@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Manual de Usuario - Sistema de Gestion de Citas SENA</title>
+<style>
+  @page { margin: 20mm; }
+  @media print {
+    body { margin: 0; }
+    .page-break { page-break-before: always; }
+    pre, table, .screenshot-container { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; font-size: 13px; line-height: 1.7; color: #1a1a1a; max-width: 850px; margin: 0 auto; padding: 25px; }
+  .cover { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #39a900 0%, #2d7a00 100%); color: white; border-radius: 12px; margin-bottom: 40px; }
+  .cover h1 { font-size: 32px; margin: 0 0 10px; font-weight: 700; }
+  .cover .subtitle { font-size: 18px; opacity: 0.9; margin-bottom: 30px; }
+  .cover .meta { font-size: 13px; opacity: 0.8; }
+  .cover .sena-logo { font-size: 48px; margin-bottom: 20px; }
+  h1 { font-size: 26px; color: #39a900; border-bottom: 3px solid #39a900; padding-bottom: 8px; margin-top: 40px; }
+  h2 { font-size: 18px; color: #2d7a00; margin-top: 30px; border-bottom: 1px solid #e0e0e0; padding-bottom: 6px; }
+  h3 { font-size: 15px; color: #333; margin-top: 20px; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 4px 0; }
+  code { background: #f0f0f0; padding: 1px 6px; border-radius: 3px; font-size: 12px; font-family: Consolas, monospace; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+  th, td { border: 1px solid #ddd; padding: 7px 10px; text-align: left; }
+  th { background: #39a900; color: white; font-weight: 600; }
+  tr:nth-child(even) { background: #f9f9f9; }
+  .screenshot-container { margin: 15px 0; text-align: center; background: #f5f5f5; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
+  .screenshot-container img { max-width: 100%; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-caption { font-size: 11px; color: #666; margin-top: 8px; font-style: italic; }
+  .step { background: #f0fff0; border-left: 4px solid #39a900; padding: 10px 15px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .step-number { display: inline-block; background: #39a900; color: white; width: 24px; height: 24px; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: bold; margin-right: 8px; }
+  .info-box { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; padding: 10px 14px; margin: 12px 0; font-size: 12px; }
+  .info-box.warning { background: #fff3e0; border-color: #ffcc80; }
+  .info-box-title { font-weight: 700; margin-bottom: 4px; }
+  .toc { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px 30px; margin: 20px 0; }
+  .toc h2 { border: none; margin-top: 0; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { padding: 3px 0; }
+  .toc a { color: #39a900; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="sena-logo">&#127891;</div>
+  <h1>Manual de Usuario</h1>
+  <div class="subtitle">Sistema de Gestion de Citas de Bienestar</div>
+  <div class="meta">
+    Servicio Nacional de Aprendizaje - SENA<br>
+    Centro de Formacion en Gestion de las Tecnologias de la Informacion<br>
+    Version 1.0 &mdash; Julio 2026
+  </div>
+</div>
+
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <ul>
+    <li><a href="#intro">1. Introduccion</a></li>
+    <li><a href="#roles">2. Roles del Sistema</a></li>
+    <li><a href="#acceso">3. Acceso al Sistema</a></li>
+    <li><a href="#registro">4. Registro de Usuarios</a></li>
+    <li><a href="#aprendiz">5. Panel del Aprendiz</a></li>
+    <li><a href="#profesional">6. Panel del Profesional</a></li>
+    <li><a href="#coordinacion">7. Panel de Coordinacion</a></li>
+    <li><a href="#admin">8. Panel de Administracion</a></li>
+    <li><a href="#reportes">9. Generacion de Reportes</a></li>
+    <li><a href="#FAQ">10. Preguntas Frecuentes</a></li>
+  </ul>
+</div>
+
+<h1 id="intro">1. Introduccion</h1>
+<p>El <strong>Sistema de Gestion de Citas de Bienestar SENA</strong> es una plataforma web disenada para facilitar la administracion de citas entre aprendices y profesionales de bienestar (psicologia, enfermeria y trabajo social) del Servicio Nacional de Aprendizaje.</p>
+
+<h3>Para que sirve?</h3>
+<ul>
+  <li><strong>Aprendices:</strong> Solicitar y gestionar citas con profesionales de bienestar.</li>
+  <li><strong>Profesionales:</strong> Administrar las citas asignadas a su dependencia.</li>
+  <li><strong>Coordinacion:</strong> Supervisar el flujo de citas y generar reportes.</li>
+  <li><strong>Administradores:</strong> Gestionar usuarios, roles, dependencias y configuracion del sistema.</li>
+</ul>
+
+<h3>Caracteristicas principales</h3>
+<ul>
+  <li>Interfaz web responsiva, accesible desde computadores y dispositivos moviles.</li>
+  <li>Autenticacion segura con correo institucional SENA.</li>
+  <li>Control de acceso basado en roles (RBAC).</li>
+  <li>Sistema de notificaciones por correo electronico.</li>
+  <li>Generacion de reportes en formato CSV y PDF.</li>
+  <li>Panel de administracion con estadisticas y auditoria.</li>
+</ul>
+
+<div class="page-break"></div>
+<h1 id="roles">2. Roles del Sistema</h1>
+<table>
+  <tr><th>Rol</th><th>Descripcion</th><th>Permisos principales</th></tr>
+  <tr><td><strong>SUPERADMIN</strong></td><td>Administrador del sistema</td><td>Gestion completa de usuarios, roles, dependencias, configuracion, auditoria.</td></tr>
+  <tr><td><strong>COORDINACION</strong></td><td>Coordinador de Bienestar</td><td>Supervision de citas, generacion de reportes, vista consolidada.</td></tr>
+  <tr><td><strong>PSICOLOGIA</strong></td><td>Profesional de Psicologia</td><td>Gestion de citas propias, actualizacion de estado, historial.</td></tr>
+  <tr><td><strong>ENFERMERIA</strong></td><td>Profesional de Enfermeria</td><td>Gestion de citas propias, actualizacion de estado, historial.</td></tr>
+  <tr><td><strong>TRABAJO_SOCIAL</strong></td><td>Profesional de Trabajo Social</td><td>Gestion de citas propias, actualizacion de estado, historial.</td></tr>
+  <tr><td><strong>APRENDIZ</strong></td><td>Aprendiz del SENA</td><td>Solicitar citas, ver/cancelar sus propias citas.</td></tr>
+</table>
+
+<h1 id="acceso">3. Acceso al Sistema</h1>
+<h2>3.1 Iniciar Sesion</h2>
+<div class="step"><span class="step-number">1</span> Abre tu navegador web y accede a la direccion del sistema.</div>
+<div class="step"><span class="step-number">2</span> Se mostrara la pagina de inicio de sesion.</div>
+
+<div class="screenshot-container">
+  <img src="IMG:01-login.png" alt="Pagina de inicio de sesion">
+  <div class="screenshot-caption">Figura 1: Pantalla de inicio de sesion</div>
+</div>
+
+<div class="step"><span class="step-number">3</span> Ingresa tu <strong>correo electronico institucional</strong> (formato: nombre@soy.sena.edu.co).</div>
+<div class="step"><span class="step-number">4</span> Ingresa tu <strong>contrasena</strong>. Puedes hacer clic en el ojo para mostrar u ocultar la contrasena.</div>
+<div class="step"><span class="step-number">5</span> Haz clic en el boton <strong>"Entrar"</strong>.</div>
+
+<div class="screenshot-container">
+  <img src="IMG:05-login-filled.png" alt="Login con datos completados">
+  <div class="screenshot-caption">Figura 2: Formulario de login con datos completados</div>
+</div>
+
+<div class="info-box"><div class="info-box-title">Tip</div>Si olvidaste tu contrasena, haz clic en "Olvidaste tu contrasena?" para recibir un correo de recuperacion.</div>
+
+<h2>3.2 Errores de Login</h2>
+<div class="screenshot-container">
+  <img src="IMG:04-login-errors.png" alt="Errores de validacion en login">
+  <div class="screenshot-caption">Figura 3: Errores de validacion en el formulario de login</div>
+</div>
+
+<div class="page-break"></div>
+<h1 id="registro">4. Registro de Usuarios</h1>
+<h2>4.1 Crear una Cuenta</h2>
+<div class="step"><span class="step-number">1</span> En la pagina de login, haz clic en "Registrate aqui".</div>
+<div class="step"><span class="step-number">2</span> Se abrira el formulario de registro.</div>
+
+<div class="screenshot-container">
+  <img src="IMG:02-register.png" alt="Formulario de registro">
+  <div class="screenshot-caption">Figura 4: Formulario de registro de usuarios</div>
+</div>
+
+<h3>Seccion: Informacion Personal</h3>
+<ol>
+  <li><strong>Nombre completo:</strong> Ingresa tu nombre y apellido.</li>
+  <li><strong>Numero de documento:</strong> Ingresa tu numero de cedula.</li>
+</ol>
+
+<h3>Seccion: Credenciales</h3>
+<ol>
+  <li><strong>Email institucional:</strong> Usa tu correo del SENA.</li>
+  <li><strong>Contrasena:</strong> Crea una contrasena segura (minimo 6 caracteres).</li>
+  <li><strong>Confirmar contrasena:</strong> Repite la contrasena.</li>
+</ol>
+
+<div class="step"><span class="step-number">3</span> Haz clic en "Crear cuenta".</div>
+
+<div class="info-box warning"><div class="info-box-title">Importante</div>Los profesionales deben seleccionar su dependencia al registrarse. Si no lo hacen, deberan contactar al administrador.</div>
+
+<h2>4.2 Recuperar Contrasena</h2>
+<div class="screenshot-container">
+  <img src="IMG:03-forgot-password.png" alt="Pagina de recuperacion de contrasena">
+  <div class="screenshot-caption">Figura 5: Pagina de recuperacion de contrasena</div>
+</div>
+
+<div class="step"><span class="step-number">1</span> En la pagina de login, haz clic en "Olvidaste tu contrasena?".</div>
+<div class="step"><span class="step-number">2</span> Ingresa tu correo electronico institucional.</div>
+<div class="step"><span class="step-number">3</span> Haz clic en "Enviar enlace de recuperacion".</div>
+<div class="step"><span class="step-number">4</span> Revisa tu bandeja de entrada y sigue el enlace.</div>
+
+<div class="page-break"></div>
+<h1 id="aprendiz">5. Panel del Aprendiz</h1>
+<h2>5.1 Solicitar una Nueva Cita</h2>
+<div class="step"><span class="step-number">1</span> Haz clic en "Nueva Cita" o "Solicitar Cita".</div>
+<div class="step"><span class="step-number">2</span> Selecciona la <strong>dependencia</strong> (Psicologia, Enfermeria o Trabajo Social).</div>
+<div class="step"><span class="step-number">3</span> Elige la <strong>fecha</strong> disponible (minimo 24 horas en adelante, dia laborable).</div>
+<div class="step"><span class="step-number">4</span> Selecciona la <strong>hora</strong> (horario laboral: 8:00 AM a 5:00 PM).</div>
+<div class="step"><span class="step-number">5</span> Escribe el <strong>motivo de la consulta</strong> (minimo 10 caracteres).</div>
+<div class="step"><span class="step-number">6</span> Haz clic en "Solicitar Cita".</div>
+
+<div class="info-box"><div class="info-box-title">Reglas de negocio</div>
+<ul>
+  <li>Maximo <strong>2 citas pendientes</strong> simultaneamente.</li>
+  <li>Fecha minimo <strong>24 horas</strong> en el futuro.</li>
+  <li>No se pueden agendar citas en <strong>fin de semana</strong>.</li>
+  <li>Horario disponible: <strong>8:00 AM a 5:00 PM</strong>.</li>
+</ul></div>
+
+<h2>5.2 Estados de una Cita</h2>
+<table>
+  <tr><th>Estado</th><th>Descripcion</th><th>Acciones</th></tr>
+  <tr><td><span style="color:#f59e0b">Pendiente</span></td><td>Cita solicitada, esperando confirmacion.</td><td>Cancelar</td></tr>
+  <tr><td><span style="color:#3b82f6">Confirmada</span></td><td>El profesional confirmo la cita.</td><td>Ver detalles</td></tr>
+  <tr><td><span style="color:#10b981">Completada</span></td><td>La cita fue atendida.</td><td>Ver historial</td></tr>
+  <tr><td><span style="color:#ef4444">Cancelada</span></td><td>La cita fue cancelada.</td><td>Ver detalles</td></tr>
+</table>
+
+<h2>5.3 Cancelar una Cita</h2>
+<div class="step"><span class="step-number">1</span> Localiza la cita (debe estar en estado "Pendiente").</div>
+<div class="step"><span class="step-number">2</span> Haz clic en "Cancelar".</div>
+<div class="step"><span class="step-number">3</span> Confirma la cancelacion.</div>
+
+<div class="page-break"></div>
+<h1 id="profesional">6. Panel del Profesional</h1>
+<h2>6.1 Gestionar Citas</h2>
+<table>
+  <tr><th>Accion</th><th>Descripcion</th></tr>
+  <tr><td><strong>Confirmar cita</strong></td><td>Aceptas la cita y te asignas como profesional responsable.</td></tr>
+  <tr><td><strong>Completar cita</strong></td><td>Marcas la cita como atendida.</td></tr>
+  <tr><td><strong>Cancelar cita</strong></td><td>Cancelas la cita (con notificacion al aprendiz).</td></tr>
+  <tr><td><strong>Ver historial</strong></td><td>Consulta el historial de citas de un aprendiz.</td></tr>
+</table>
+
+<h1 id="coordinacion">7. Panel de Coordinacion</h1>
+<p>El coordinador tiene una vista consolidada de todas las dependencias.</p>
+<ul>
+  <li><strong>KPIs principales:</strong> Total de citas, tasa de completadas, pendientes, no-shows.</li>
+  <li><strong>Grafico de dependencias:</strong> Distribucion de citas por area.</li>
+  <li><strong>Tendencia mensual:</strong> Evolucion del numero de citas.</li>
+  <li><strong>Rendimiento de profesionales:</strong> Tabla comparativa.</li>
+</ul>
+
+<div class="page-break"></div>
+<h1 id="admin">8. Panel de Administracion</h1>
+<h2>8.1 Panel General</h2>
+<ul>
+  <li><strong>Estadisticas globales:</strong> Total de usuarios activos, citas, tasa de completadas.</li>
+  <li><strong>Actividad reciente:</strong> Ultimas citas creadas o modificadas.</li>
+  <li><strong>Distribucion por rol:</strong> Grafico de usuarios por tipo.</li>
+</ul>
+
+<h2>8.2 Gestion de Usuarios</h2>
+<div class="step"><span class="step-number">1</span> Accede a la pestana "Usuarios".</div>
+<div class="step"><span class="step-number">2</span> Visualiza la lista de todos los usuarios.</div>
+<div class="step"><span class="step-number">3</span> Busca por nombre o documento, filtra por rol o estado.</div>
+<div class="step"><span class="step-number">4</span> Para editar, haz clic en editar y modifica rol, dependencia o estado.</div>
+
+<h2>8.3 Gestion de Roles</h2>
+<ul>
+  <li>Crear nuevos roles personalizados.</li>
+  <li>Editar nombre y descripcion de roles existentes.</li>
+  <li>Eliminar roles sin usuarios asignados.</li>
+  <li>Gestionar permisos de cada rol.</li>
+</ul>
+
+<h2>8.4 Auditoria</h2>
+<p>El sistema registra todas las acciones importantes. Puedes filtrar por tipo de accion, usuario administrador o rango de fechas.</p>
+
+<div class="page-break"></div>
+<h1 id="reportes">9. Generacion de Reportes</h1>
+<table>
+  <tr><th>Formato</th><th>Uso recomendado</th></tr>
+  <tr><td><strong>CSV</strong></td><td>Analisis en Excel o Google Sheets.</td></tr>
+  <tr><td><strong>PDF</strong></td><td>Impresion o envio por correo.</td></tr>
+</table>
+<div class="step"><span class="step-number">1</span> Accede a "Reportes" en tu panel.</div>
+<div class="step"><span class="step-number">2</span> Selecciona el rango de fechas.</div>
+<div class="step"><span class="step-number">3</span> Aplica filtros adicionales si lo deseas.</div>
+<div class="step"><span class="step-number">4</span> Haz clic en "Generar Reporte".</div>
+
+<h1 id="FAQ">10. Preguntas Frecuentes</h1>
+<h3>Como cambio mi contrasena?</h3>
+<p>Abre el menu de usuario (clic en tu avatar) y selecciona "Cambiar contrasena".</p>
+<h3>Puedo agendar una cita para el mismo dia?</h3>
+<p>No, el sistema requiere al menos <strong>24 horas de anticipacion</strong>.</p>
+<h3>Que hago si no hay horarios disponibles?</h3>
+<p>Intenta con otra fecha u hora. Si persiste, contacta a la coordinacion.</p>
+<h3>Como cancelo una cita confirmada?</h3>
+<p>Las citas confirmadas solo pueden ser canceladas por el <strong>profesional</strong> o el <strong>coordinador</strong>.</p>
+
+<hr>
+<p style="text-align: center; color: #999; margin-top: 40px; font-size: 11px;">
+  Manual de Usuario &mdash; Sistema de Gestion de Citas SENA &mdash; Version 1.0 &mdash; Julio 2026
+</p>
+</body>
+</html>

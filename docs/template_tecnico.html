@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Manual Tecnico - Sistema de Gestion de Citas SENA</title>
+<style>
+  @page { margin: 20mm; }
+  @media print {
+    body { margin: 0; }
+    .page-break { page-break-before: always; }
+    pre, table, .screenshot-container { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; font-size: 13px; line-height: 1.7; color: #1a1a1a; max-width: 850px; margin: 0 auto; padding: 25px; }
+  .cover { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; border-radius: 12px; margin-bottom: 40px; }
+  .cover h1 { font-size: 30px; margin: 0 0 10px; font-weight: 700; }
+  .cover .subtitle { font-size: 17px; opacity: 0.9; margin-bottom: 30px; }
+  .cover .meta { font-size: 13px; opacity: 0.8; }
+  .cover .icon { font-size: 48px; margin-bottom: 20px; }
+  h1 { font-size: 24px; color: #0f3460; border-bottom: 3px solid #0f3460; padding-bottom: 8px; margin-top: 40px; }
+  h2 { font-size: 17px; color: #16213e; margin-top: 28px; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px; }
+  h3 { font-size: 14px; color: #333; margin-top: 18px; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 4px 0; }
+  code { background: #f0f0f0; padding: 1px 6px; border-radius: 3px; font-size: 11.5px; font-family: Consolas, monospace; }
+  pre { background: #1e1e1e; color: #d4d4d4; border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 11px; line-height: 1.5; margin: 10px 0; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+  th, td { border: 1px solid #ddd; padding: 7px 10px; text-align: left; }
+  th { background: #0f3460; color: white; font-weight: 600; }
+  tr:nth-child(even) { background: #f9f9f9; }
+  .screenshot-container { margin: 15px 0; text-align: center; background: #f5f5f5; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
+  .screenshot-container img { max-width: 100%; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-caption { font-size: 11px; color: #666; margin-top: 8px; font-style: italic; }
+  .info-box { background: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; padding: 10px 14px; margin: 12px 0; font-size: 12px; }
+  .info-box.warning { background: #fff3e0; border-color: #ffcc80; }
+  .info-box-title { font-weight: 700; margin-bottom: 4px; }
+  .toc { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px 30px; margin: 20px 0; }
+  .toc h2 { border: none; margin-top: 0; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { padding: 3px 0; }
+  .toc a { color: #0f3460; text-decoration: none; }
+  .arch-box { background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 12px 0; font-family: Consolas, monospace; font-size: 11px; line-height: 1.6; white-space: pre; overflow-x: auto; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .badge-green { background: #e8f5e9; color: #2e7d32; }
+  .badge-blue { background: #e3f2fd; color: #1565c0; }
+  .badge-orange { background: #fff3e0; color: #e65100; }
+  .badge-red { background: #ffebee; color: #c62828; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="icon">&#9881;&#65039;</div>
+  <h1>Manual Tecnico</h1>
+  <div class="subtitle">Sistema de Gestion de Citas de Bienestar SENA</div>
+  <div class="meta">
+    Servicio Nacional de Aprendizaje - SENA<br>
+    Documentacion tecnica del sistema<br>
+    Version 1.0 &mdash; Julio 2026
+  </div>
+</div>
+
+<div class="toc">
+  <h2>Tabla de Contenidos</h2>
+  <ul>
+    <li><a href="#overview">1. Vision General del Sistema</a></li>
+    <li><a href="#architecture">2. Arquitectura</a></li>
+    <li><a href="#tech-stack">3. Stack Tecnologico</a></li>
+    <li><a href="#structure">4. Estructura del Proyecto</a></li>
+    <li><a href="#database">5. Modelo de Datos (Supabase)</a></li>
+    <li><a href="#auth">6. Sistema de Autenticacion y RBAC</a></li>
+    <li><a href="#features">7. Modulos Funcionales</a></li>
+    <li><a href="#api">8. Capa de Acceso a Datos (Repository Pattern)</a></li>
+    <li><a href="#hooks">9. Custom Hooks</a></li>
+    <li><a href="#components">10. Componentes Compartidos</a></li>
+    <li><a href="#validation">11. Validaciones (Zod)</a></li>
+    <li><a href="#testing">12. Estrategia de Testing</a></li>
+    <li><a href="#deployment">13. Despliegue</a></li>
+    <li><a href="#env">14. Variables de Entorno</a></li>
+  </ul>
+</div>
+
+<h1 id="overview">1. Vision General del Sistema</h1>
+<p>El <strong>Sistema de Gestion de Citas de Bienestar SENA</strong> es una aplicacion web SPA construida con React que permite gestionar citas entre aprendices del SENA y profesionales de bienestar.</p>
+
+<h3>Actores del Sistema</h3>
+<table>
+  <tr><th>Rol</th><th>Descripcion</th><th>Permisos</th></tr>
+  <tr><td><span class="badge badge-red">SUPERADMIN</span></td><td>Administrador del sistema</td><td>CRUD completo de usuarios, roles, dependencias, configuracion, auditoria.</td></tr>
+  <tr><td><span class="badge badge-orange">COORDINACION</span></td><td>Coordinador de Bienestar</td><td>Supervision de citas, reportes consolidados, vista multi-dependencia.</td></tr>
+  <tr><td><span class="badge badge-blue">PROFESIONAL</span></td><td>Psicologia / Enfermeria / Trabajo Social</td><td>Gestion de citas de su dependencia, historial de aprendices.</td></tr>
+  <tr><td><span class="badge badge-green">APRENDIZ</span></td><td>Aprendiz del SENA</td><td>Solicitar citas, ver/cancelar sus propias citas.</td></tr>
+</table>
+
+<div class="screenshot-container">
+  <img src="IMG:01-login.png" alt="Pantalla de login" style="max-width: 500px;">
+  <div class="screenshot-caption">Figura 1: Pantalla de login del sistema</div>
+</div>
+
+<div class="page-break"></div>
+<h1 id="architecture">2. Arquitectura</h1>
+<h2>2.1 Diagrama de Arquitectura</h2>
+<div class="arch-box">
++-----------------------------------------------------------------------+
+|                        CAPA DE PRESENTACION                           |
+|  React 19 + React Router 7 + Lucide React + Recharts                 |
+|                                                                       |
+|  [Login] [Dashboard Aprendiz] [Admin Panel] [Reports Panel] ...      |
++-----------------------------------------------------------------------+
+|                         CAPA DE LOGICA                                 |
+|  Custom Hooks: useAppointments, useAdmin, useReports                  |
+|  React Hook Form + Zod (validacion)                                   |
+|  AuthProvider (context + RBAC)                                        |
++-----------------------------------------------------------------------+
+|                      CAPA DE ACCESO A DATOS                            |
+|  Repository Pattern:                                                  |
+|  [AppointmentRepo] [AdminRepository] [DashboardRepo]                  |
++-----------------------------------------------------------------------+
+|                       CAPA DE SERVICIOS                                |
+|  Supabase JS Client v2                                                |
+|  [ Supabase Cloud (PostgreSQL + Auth + Realtime + RLS) ]              |
++-----------------------------------------------------------------------+</div>
+
+<h2>2.2 Patrones de Arquitectura</h2>
+<ul>
+  <li><strong>Separacion de Concerns:</strong> Cada capa tiene una responsabilidad unica.</li>
+  <li><strong>Repository Pattern:</strong> El acceso a datos esta encapsulado en clases repositorio.</li>
+  <li><strong>Custom Hooks:</strong> La logica de negocio se extrae en hooks reutilizables.</li>
+  <li><strong>Feature-Based Organization:</strong> Codigo organizado por dominio (appointments, admin, dashboard, auth).</li>
+</ul>
+
+<h2>2.3 Flujo de Datos</h2>
+<pre><code>Componente --&gt; Custom Hook --&gt; Repository --&gt; Supabase Client --&gt; Supabase API
+    |              |              |              |
+    +-- Render &lt;-- State &lt;-- Data &lt;-- Promise &lt;-- Response</code></pre>
+
+<div class="page-break"></div>
+<h1 id="tech-stack">3. Stack Tecnologico</h1>
+<h2>3.1 Frontend</h2>
+<table>
+  <tr><th>Tecnologia</th><th>Version</th><th>Uso</th></tr>
+  <tr><td><strong>React</strong></td><td>19.2.x</td><td>Libreria principal de UI</td></tr>
+  <tr><td><strong>React Router</strong></td><td>7.14.x</td><td>Navegacion SPA con rutas protegidas</td></tr>
+  <tr><td><strong>React Hook Form</strong></td><td>7.72.x</td><td>Gestion de formularios</td></tr>
+  <tr><td><strong>Zod</strong></td><td>4.3.x</td><td>Validacion de schemas</td></tr>
+  <tr><td><strong>Recharts</strong></td><td>3.8.x</td><td>Graficos y visualizacion</td></tr>
+  <tr><td><strong>Lucide React</strong></td><td>1.8.x</td><td>Iconos SVG</td></tr>
+  <tr><td><strong>Sonner</strong></td><td>2.0.x</td><td>Notificaciones toast</td></tr>
+  <tr><td><strong>date-fns</strong></td><td>4.1.x</td><td>Manipulacion de fechas</td></tr>
+</table>
+
+<h2>3.2 Backend (BaaS)</h2>
+<table>
+  <tr><th>Servicio</th><th>Uso</th></tr>
+  <tr><td><strong>Supabase</strong></td><td>Backend-as-a-Service: PostgreSQL, Autenticacion, Row Level Security, Realtime</td></tr>
+</table>
+
+<h2>3.3 Herramientas de Desarrollo</h2>
+<table>
+  <tr><th>Herramienta</th><th>Uso</th></tr>
+  <tr><td><strong>Vite</strong></td><td>Bundler y servidor de desarrollo</td></tr>
+  <tr><td><strong>Vitest</strong></td><td>Unit testing</td></tr>
+  <tr><td><strong>Testing Library</strong></td><td>Testing de componentes React</td></tr>
+  <tr><td><strong>Playwright</strong></td><td>E2E testing en navegador real</td></tr>
+  <tr><td><strong>ESLint</strong></td><td>Analisis estatico de codigo</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h1 id="structure">4. Estructura del Proyecto</h1>
+<div class="arch-box">
+gestion-citas/
+  src/
+    main.jsx                     # Punto de entrada
+    App.jsx                      # Componente raiz
+    features/                    # Modulos por dominio
+      auth/                      # Autenticacion
+        pages/                   # Login, Register, ForgotPassword
+      appointments/              # Gestion de citas
+        api/                     # appointments.repository.js
+        components/              # AppointmentCard, AppointmentForm
+        hooks/                   # useAppointments, useReports
+        pages/                   # Dashboards por rol
+        validations/             # appointment.schema.js (Zod)
+      dashboard/                 # Dashboard de coordinacion
+        api/                     # dashboard.repository.js
+        components/              # KPICard, Charts, Tables
+        pages/                   # CoordinationDashboard
+      admin/                     # Panel de administracion
+        api/                     # admin.repository.js
+        components/              # UserManagement, RoleManagement
+        hooks/                   # useAdmin
+        pages/                   # AdminDashboard
+    shared/                      # Componentes compartidos
+      components/                # AuthLayout, EmptyState, Skeleton, UserAvatar
+      styles/                    # CSS (variables, global, cards)
+      utils/                     # audit.js
+    providers/                   # Context providers
+      AuthProvider.jsx           # Autenticacion + RBAC
+    routes/                      # Enrutamiento
+      AppRoutes.jsx              # Definicion de rutas
+      ProtectedRoute.jsx         # Guard de rutas
+    lib/                         # Configuracion de servicios
+      supabase.js                # Cliente Supabase
+    mocks/                       # Mocks para testing
+    test/                        # Configuracion de testing
+  tests/e2e/                     # Tests E2E (Playwright)
+  docs/                          # Documentacion</div>
+
+<div class="page-break"></div>
+<h1 id="database">5. Modelo de Datos (Supabase)</h1>
+<h2>5.1 Diagrama Entidad-Relacion</h2>
+<div class="arch-box">
+[roles]                [profiles]              [dependencies]
++---------+           +-------------+          +----------+
+| id (PK) |&lt;----------| role_id(FK) |          | id (PK)  |
+| name    |           | id (PK)     |          | name     |
+| perms   |           | full_name   |          | color    |
++---------+           | document_num|          +----+-----+
+                      | email       |               |
+                      | is_active   |               |
+                      | dependency_id|-------------&gt;|
+                      +------+------+               |
+                             |                      |
+                             | 1:N                  |
+                             v                      |
+                      +-------------+               |
+                      | appointments|               |
+                      +-------------+               |
+                      | id (PK)     |               |
+                      | user_id(FK) |---&gt; profiles  |
+                      | prof_id(FK) |---&gt; profiles  |
+                      | dep_id (FK) |---&gt;-----------+
+                      | scheduled_dt|               |
+                      | scheduled_tm|               |
+                      | status      |               |
+                      | reason      |               |
+                      +-------------+
+
+[audit_logs]           [system_config]
++-------------+       +-----------+
+| id (PK)     |       | key (PK)  |
+| user_id(FK) |       | value     |
+| action      |       | updated_by|
+| entity_type |       | updated_at|
+| entity_id   |       +-----------+
+| oid_data    |
+| new_data    |
++-------------+</div>
+
+<h2>5.2 Tabla appointments (Citas)</h2>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Constraints</th><th>Descripcion</th></tr>
+  <tr><td><code>id</code></td><td>UUID</td><td>PK</td><td>ID de la cita</td></tr>
+  <tr><td><code>user_id</code></td><td>UUID</td><td>FK profiles</td><td>Aprendiz que solicita</td></tr>
+  <tr><td><code>professional_id</code></td><td>UUID</td><td>FK profiles, NULL</td><td>Profesional asignado</td></tr>
+  <tr><td><code>dependency_id</code></td><td>INT</td><td>FK dependencies</td><td>Dependencia</td></tr>
+  <tr><td><code>scheduled_date</code></td><td>DATE</td><td>NOT NULL</td><td>Fecha</td></tr>
+  <tr><td><code>scheduled_time</code></td><td>TIME</td><td>NOT NULL</td><td>Hora</td></tr>
+  <tr><td><code>status</code></td><td>TEXT</td><td>DEFAULT pending</td><td>pending/confirmed/completed/cancelled/no_show</td></tr>
+  <tr><td><code>reason</code></td><td>TEXT</td><td>NOT NULL</td><td>Motivo</td></tr>
+  <tr><td><code>notes</code></td><td>TEXT</td><td>NULLABLE</td><td>Notas del profesional</td></tr>
+</table>
+
+<h2>5.3 Row Level Security (RLS)</h2>
+<pre><code>-- Aprendiz solo ve sus propias citas
+CREATE POLICY "Aprendices ven sus citas"
+ON appointments FOR SELECT
+USING (
+  user_id = auth.uid()
+  OR professional_id = auth.uid()
+  OR EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid()
+    AND role_id IN (1, 2)  -- SUPERADMIN, COORDINACION
+  )
+);</code></pre>
+
+<div class="page-break"></div>
+<h1 id="auth">6. Sistema de Autenticacion y RBAC</h1>
+<h2>6.1 Flujo de Autenticacion</h2>
+<div class="arch-box">
+[Login Form] --&gt; [Supabase Auth] --&gt; [Auth Provider] --&gt; [Profile Fetch]
+                         |                     |                   |
+                         v                     v                   v
+                  [onAuth State]        [RBAC Helpers]        [Route Guard]</div>
+
+<h2>6.2 Helpers RBAC en AuthProvider</h2>
+<pre><code>const hasRole = (roleName) => {
+  const role = profile?.roles?.name?.toUpperCase();
+  if (Array.isArray(roleName))
+    return roleName.some(r => role === r.toUpperCase());
+  return role === roleName.toUpperCase();
+};
+
+const isAdmin = () => hasRole("SUPERADMIN");
+const isCoordination = () => hasRole("COORDINACION") || isAdmin();
+const isAprendiz = () => hasRole("APRENDIZ");</code></pre>
+
+<h2>6.3 Matriz de Permisos</h2>
+<table>
+  <tr><th>Funcionalidad</th><th>SUPERADMIN</th><th>COORDINACION</th><th>PROFESIONAL</th><th>APRENDIZ</th></tr>
+  <tr><td>Ver citas</td><td>Todas</td><td>Todas</td><td>Dependencia</td><td>Propias</td></tr>
+  <tr><td>Solicitar cita</td><td>No</td><td>No</td><td>No</td><td>Si</td></tr>
+  <tr><td>Confirmar/Completar</td><td>Si</td><td>Si</td><td>Si</td><td>No</td></tr>
+  <tr><td>Cancelar cita</td><td>Si</td><td>Si</td><td>Si</td><td>Pendientes</td></tr>
+  <tr><td>Gestionar usuarios</td><td>Si</td><td>No</td><td>No</td><td>No</td></tr>
+  <tr><td>Gestionar roles</td><td>Si</td><td>No</td><td>No</td><td>No</td></tr>
+  <tr><td>Reportes</td><td>Si</td><td>Todos</td><td>Propios</td><td>No</td></tr>
+  <tr><td>Auditoria</td><td>Si</td><td>No</td><td>No</td><td>No</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h1 id="features">7. Modulos Funcionales</h1>
+<h2>7.1 Estados de una Cita</h2>
+<pre><code>pending ──────&gt; confirmed ──────&gt; completed
+   |                                   |
+   |              +--------------------+
+   |              v
+   └────────&gt; cancelled          no_show</code></pre>
+
+<h2>7.2 Modulo de Administracion</h2>
+<div class="screenshot-container">
+  <img src="IMG:04-login-errors.png" alt="Panel de administracion" style="max-width: 500px;">
+  <div class="screenshot-caption">Figura 2: Sistema de validacion en formularios</div>
+</div>
+
+<table>
+  <tr><th>Componente</th><th>Funcion</th></tr>
+  <tr><td><code>AdminDashboard.jsx</code></td><td>Contenedor principal con navegacion por tabs.</td></tr>
+  <tr><td><code>AdminOverview.jsx</code></td><td>Panel general con KPIs, actividad reciente.</td></tr>
+  <tr><td><code>UserManagement.jsx</code></td><td>CRUD de usuarios con paginacion y filtros.</td></tr>
+  <tr><td><code>RoleManagement.jsx</code></td><td>Gestion de roles y permisos.</td></tr>
+  <tr><td><code>DependencyManagement.jsx</code></td><td>Gestion de dependencias.</td></tr>
+  <tr><td><code>AuditLogViewer.jsx</code></td><td>Visor de logs de auditoria.</td></tr>
+  <tr><td><code>SystemConfig.jsx</code></td><td>Configuracion del sistema.</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h1 id="api">8. Capa de Acceso a Datos (Repository Pattern)</h1>
+<h2>8.1 AppointmentRepository</h2>
+<pre><code>export class AppointmentRepository {
+  static async create(appointmentData) { ... }
+  static async fetch({ userId, dependencyId, status, ... }) { ... }
+  static async update(id, updates) { ... }
+  static async checkAvailability(depId, date, time) { ... }
+  static async countPending(userId) { ... }
+  static async fetchApprenticeHistory(userId, depId) { ... }
+}</code></pre>
+
+<h2>8.2 AdminRepository</h2>
+<pre><code>export class AdminRepository {
+  static async getUsers({ role, search, page, limit }) { ... }
+  static async updateUser(userId, updates, adminId) { ... }
+  static async createUser(userData, adminId) { ... }
+  static async getConfig() { ... }
+  static async getGlobalStats() { ... }
+  static async getAllAppointments(filters) { ... }
+  static async getRoles() { ... }
+  static async createRole(data, adminId) { ... }
+  static async deleteRole(roleId, adminId) { ... }
+  static async logAction({ userId, action, ... }) { ... }
+}</code></pre>
+
+<h1 id="hooks">9. Custom Hooks</h1>
+<table>
+  <tr><th>Hook</th><th>Estado</th><th>Funciones</th></tr>
+  <tr><td><code>useAppointments</code></td><td>appointments, status, error, searchFilters</td><td>fetch, create, update, cancel, search</td></tr>
+  <tr><td><code>useAdmin</code></td><td>users, roles, dependencies, config, pagination</td><td>fetchUsers, createRole, updateRole, deleteRole</td></tr>
+  <tr><td><code>useReports</code></td><td>reportData, summary, loading</td><td>generateReport, exportToCSV, exportToPDF</td></tr>
+  <tr><td><code>useDashboard</code></td><td>kpis, byDependency, monthlyTrend, professionals</td><td>fetchAllMetrics, getDefaultRange</td></tr>
+</table>
+
+<h1 id="components">10. Componentes Compartidos</h1>
+<table>
+  <tr><th>Componente</th><th>Props</th><th>Descripcion</th></tr>
+  <tr><td><code>AuthLayout</code></td><td>children</td><td>Layout para paginas de autenticacion.</td></tr>
+  <tr><td><code>UserAvatar</code></td><td>name, size, onClick</td><td>Avatar con iniciales auto-generadas.</td></tr>
+  <tr><td><code>EmptyState</code></td><td>icon, title, description, action</td><td>Estado vacio.</td></tr>
+  <tr><td><code>Skeleton</code></td><td>variant, width, height, count</td><td>Placeholder de carga.</td></tr>
+  <tr><td><code>SearchSidebar</code></td><td>filters, onFilterChange</td><td>Panel lateral de busqueda.</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h1 id="validation">11. Validaciones (Zod)</h1>
+<h2>11.1 Schema de Cita</h2>
+<pre><code>export const appointmentSchema = z.object({
+  dependency_id: z.number().int().positive(),
+  scheduled_date: z.string()
+    .refine(d => !isWeekend(new Date(d)))
+    .refine(d => !isPast(startOfDay(new Date(d))))
+    .refine(d => new Date(d) >= startOfDay(addDays(new Date(), 1))),
+  scheduled_time: z.string()
+    .regex(/^[0-9]{2}:[0-9]{2}$/)
+    .refine(t => { const h = Number(t.split(":")[0]); return h >= 8 && h < 17; }),
+  reason: z.string().min(10).max(500),
+  notes: z.string().max(1000).optional(),
+});</code></pre>
+
+<h2>11.2 Reglas de Validacion</h2>
+<table>
+  <tr><th>Campo</th><th>Regla</th><th>Mensaje</th></tr>
+  <tr><td>dependency_id</td><td>Entero positivo</td><td>Selecciona una dependencia</td></tr>
+  <tr><td>scheduled_date</td><td>No fin de semana</td><td>No se agendan citas los fines de semana</td></tr>
+  <tr><td>scheduled_date</td><td>No fecha pasada</td><td>No puedes agendar en fechas pasadas</td></tr>
+  <tr><td>scheduled_date</td><td>Minimo +24h</td><td>Debes agendar con minimo 24 horas</td></tr>
+  <tr><td>scheduled_time</td><td>Formato HH:MM</td><td>Formato de hora invalido</td></tr>
+  <tr><td>scheduled_time</td><td>8:00 - 16:59</td><td>Horario entre 8:00 AM y 5:00 PM</td></tr>
+  <tr><td>reason</td><td>10-500 caracteres</td><td>Minimo 10 caracteres</td></tr>
+</table>
+
+<div class="page-break"></div>
+<h1 id="testing">12. Estrategia de Testing</h1>
+<table>
+  <tr><th>Nivel</th><th>Herramienta</th><th>Archivos</th><th>Cobertura</th></tr>
+  <tr><td><strong>Unit Tests</strong></td><td>Vitest + Testing Library</td><td>*.test.js/*.test.jsx</td><td>214 tests, 16 archivos</td></tr>
+  <tr><td><strong>E2E Tests</strong></td><td>Playwright</td><td>*.spec.js</td><td>~28 tests, 5 archivos</td></tr>
+</table>
+
+<pre><code># Unit tests
+npm run test                  # Ejecutar una vez
+npm run test:watch            # Modo watch
+npm run test:coverage         # Con cobertura
+
+# E2E tests
+npm run test:install          # Instalar navegadores
+npm run test:e2e              # Ejecutar E2E
+npm run test:e2e:ui           # Con UI interactiva</code></pre>
+
+<div class="page-break"></div>
+<h1 id="deployment">13. Despliegue</h1>
+<h2>13.1 Requisitos</h2>
+<ul>
+  <li>Node.js 18+</li>
+  <li>npm 9+</li>
+  <li>Cuenta de Supabase con proyecto configurado</li>
+</ul>
+
+<h2>13.2 Instalacion</h2>
+<pre><code># Clonar
+git clone https://github.com/[org]/gestion-citas.git
+cd gestion-citas
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con credenciales de Supabase
+
+# Ejecutar en desarrollo
+npm run dev
+
+# Build para produccion
+npm run build</code></pre>
+
+<h1 id="env">14. Variables de Entorno</h1>
+<table>
+  <tr><th>Variable</th><th>Requerida</th><th>Descripcion</th></tr>
+  <tr><td><code>VITE_SUPABASE_URL</code></td><td>Si</td><td>URL del proyecto Supabase</td></tr>
+  <tr><td><code>VITE_SUPABASE_ANON_KEY</code></td><td>Si</td><td>Clave publica (anon) de Supabase</td></tr>
+</table>
+
+<div class="info-box warning"><div class="info-box-title">Seguridad</div>Nunca commits los archivos .env al repositorio. Estan incluidos en .gitignore.</div>
+
+<hr>
+<p style="text-align: center; color: #999; margin-top: 40px; font-size: 11px;">
+  Manual Tecnico &mdash; Sistema de Gestion de Citas SENA &mdash; Version 1.0 &mdash; Julio 2026
+</p>
+</body>
+</html>

@@ -1,13 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
 
 // 1 Creamos el contenedor (context)
-
 const AuthContext = createContext(null);
 
 // 2. Hook personalizado para usar el contexto facilmente
 //esto evita importar useContext y AuthContext en cada archivo
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -24,41 +22,14 @@ export function AuthProvider({ children }) {
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "INITIAL_SESSION") {
-          if (session?.user) {
-            setProfileLoaded(false);
-            setUser(session.user);
-            await fetchProfile(session.user.id, session.user);
-          } else {
-            setUser(null);
-            setProfile(null);
-            setProfileLoaded(true);
-          }
-          setInitialLoading(false);
-        } else if (event === "SIGNED_IN") {
-          if (session?.user) {
-            setProfileLoaded(false);
-            setUser(session.user);
-            await fetchProfile(session.user.id, session.user);
-          }
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-          setProfile(null);
-          setProfileLoaded(true);
-        }
-      },
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
+  // Guard para evitar fetchProfile concurrentes
+  const fetchingRef = useRef(false);
 
   //funcion auxiliar: obterner el perfil + el rol desde nuestra base de datos
   const fetchProfile = async (userId, authUser) => {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+
     try {
       const meta = authUser?.user_metadata || {};
 
@@ -68,7 +39,7 @@ export function AuthProvider({ children }) {
           `
             *,
             roles (name, permissions),
-            dependencies(name)            
+            dependencies(name)
             `,
         )
         .eq("id", userId)
@@ -107,13 +78,76 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error("Error cargando perfil:", err?.msg || err?.message || JSON.stringify(err));
       setError("No se pudo cargar el perfil de usuario");
-      if (authUser) {
-        await supabase.auth.signOut();
-      }
+      // NO llamar signOut en error de red - solo en errores de auth
+      // Esto evita el loop infinito: fetchProfile falla -> signOut -> SIGNED_IN -> fetchProfile falla...
     } finally {
       setProfileLoaded(true);
+      fetchingRef.current = false;
     }
   };
+
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "INITIAL_SESSION") {
+          if (session?.user) {
+            setProfileLoaded(false);
+            setUser(session.user);
+            // await en INITIAL_SESSION esta bien porque es el primer carga
+            fetchProfile(session.user.id, session.user);
+          } else {
+            setUser(null);
+            setProfile(null);
+            setProfileLoaded(true);
+          }
+          setInitialLoading(false);
+        } else if (event === "SIGNED_IN") {
+          if (session?.user) {
+            setProfileLoaded(false);
+            setUser(session.user);
+            // NO await - fire & forget.
+            // Si fetchProfile se cuelga, no bloquea la cola de eventos de Supabase.
+            // El visibilitychange listener lo relanzara si es necesario.
+            fetchProfile(session.user.id, session.user);
+          }
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+          setProfile(null);
+          setProfileLoaded(true);
+          fetchingRef.current = false;
+        }
+      },
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // FIX: Cuando el usuario vuelve a la pestaña y profileLoaded sigue en false
+  // (fetchProfile se quedo colgado), resetear el guard y re-lanzar.
+  const profileLoadedRef = useRef(false);
+  const userRef = useRef(null);
+  useEffect(() => { profileLoadedRef.current = profileLoaded; }, [profileLoaded]);
+  useEffect(() => { userRef.current = user; }, [user]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (
+        document.visibilityState === "visible" &&
+        !profileLoadedRef.current &&
+        userRef.current
+      ) {
+        console.log("[Auth] Tab visible, reset guard + re-lanzando fetchProfile...");
+        fetchingRef.current = false; // resetear el guard
+        fetchProfile(userRef.current.id, userRef.current);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   //Método de autenticacion (clean code: funciones puras y descriptivas)
   const signIn = async (email, password) => {
